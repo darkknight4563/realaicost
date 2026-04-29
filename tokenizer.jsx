@@ -49,7 +49,9 @@ const encoderCache = new Map(); // encoding name → encoder instance
 
 function loadTiktoken() {
   if (!tiktokenModulePromise) {
-    tiktokenModulePromise = import("https://esm.sh/js-tiktoken@1.0.15").catch(err => {
+    // ?bundle&target=es2022 forces esm.sh to emit a fully-bundled ES2022 build,
+    // avoiding any stray CommonJS require() shims that can leak through the default URL.
+    tiktokenModulePromise = import("https://esm.sh/js-tiktoken@1.0.15?bundle&target=es2022").catch(err => {
       tiktokenModulePromise = null;  // allow retry
       throw err;
     });

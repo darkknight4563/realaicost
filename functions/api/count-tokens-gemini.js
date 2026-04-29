@@ -9,6 +9,8 @@
 
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 const CACHE_TTL_SECONDS = 3600;
+const MAX_PAYLOAD_BYTES = 200 * 1024;
+const MAX_TEXT_CHARS = 500_000;
 
 function json(body, init = {}) {
   return new Response(JSON.stringify(body), {
@@ -60,8 +62,16 @@ export async function onRequestPost({ request, env }) {
   }
 
   let payload;
+  let rawText;
   try {
-    payload = await request.json();
+    rawText = await request.text();
+    if (rawText.length > MAX_PAYLOAD_BYTES) {
+      return json(
+        { input_tokens: null, fallback: true, error: "payload too large" },
+        { status: 200, headers: cors }
+      );
+    }
+    payload = JSON.parse(rawText);
   } catch {
     return json({ input_tokens: null, fallback: true, error: "invalid json" }, { status: 200, headers: cors });
   }
@@ -70,6 +80,23 @@ export async function onRequestPost({ request, env }) {
   if (!model || !Array.isArray(messages)) {
     return json(
       { input_tokens: null, fallback: true, error: "missing model or messages[]" },
+      { status: 200, headers: cors }
+    );
+  }
+
+  let textChars = (typeof system === "string" ? system.length : 0);
+  for (const m of messages) {
+    if (typeof m?.content === "string") textChars += m.content.length;
+    else if (Array.isArray(m?.content)) {
+      for (const part of m.content) {
+        if (typeof part?.text === "string") textChars += part.text.length;
+      }
+    }
+    if (textChars > MAX_TEXT_CHARS) break;
+  }
+  if (textChars > MAX_TEXT_CHARS) {
+    return json(
+      { input_tokens: null, fallback: true, error: "payload too large" },
       { status: 200, headers: cors }
     );
   }
