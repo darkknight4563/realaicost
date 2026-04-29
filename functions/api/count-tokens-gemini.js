@@ -1,0 +1,135 @@
+// Deploys as a Cloudflare Pages Function.
+// Requires env var GOOGLE_API_KEY set in
+// Cloudflare dashboard → Pages project → Settings → Environment variables.
+// Google's countTokens API is free; this proxy exists to keep the key server-side.
+//
+// Request:  POST { model, messages, system? }   (Anthropic-shaped for frontend consistency)
+// Response: 200 { input_tokens, cached, source: "api" }
+//       or: 200 { input_tokens: null, fallback: true, error: "<reason>" }
+
+const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
+const CACHE_TTL_SECONDS = 3600;
+
+function json(body, init = {}) {
+  return new Response(JSON.stringify(body), {
+    ...init,
+    headers: { "content-type": "application/json", ...(init.headers || {}) },
+  });
+}
+
+function corsHeaders(request) {
+  const origin = request.headers.get("origin") || "";
+  const url = new URL(request.url);
+  const sameOrigin = origin === `${url.protocol}//${url.host}`;
+  return {
+    "access-control-allow-origin": sameOrigin ? origin : url.origin,
+    "access-control-allow-methods": "POST, OPTIONS",
+    "access-control-allow-headers": "content-type",
+    "vary": "origin",
+  };
+}
+
+async function sha256Hex(str) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Translate Anthropic-shape {messages, system} → Gemini-shape {contents, systemInstruction}
+function toGeminiPayload({ messages, system }) {
+  const contents = (messages || []).map(m => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: typeof m.content === "string" ? m.content : JSON.stringify(m.content) }],
+  }));
+  const payload = { contents };
+  if (system) payload.systemInstruction = { parts: [{ text: system }] };
+  return payload;
+}
+
+export async function onRequestOptions({ request }) {
+  return new Response(null, { status: 204, headers: corsHeaders(request) });
+}
+
+export async function onRequestPost({ request, env }) {
+  const cors = corsHeaders(request);
+
+  if (!env.GOOGLE_API_KEY) {
+    return json(
+      { input_tokens: null, fallback: true, error: "GOOGLE_API_KEY not configured" },
+      { status: 200, headers: cors }
+    );
+  }
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ input_tokens: null, fallback: true, error: "invalid json" }, { status: 200, headers: cors });
+  }
+
+  const { model, messages, system } = payload || {};
+  if (!model || !Array.isArray(messages)) {
+    return json(
+      { input_tokens: null, fallback: true, error: "missing model or messages[]" },
+      { status: 200, headers: cors }
+    );
+  }
+
+  const cacheBody = JSON.stringify({ provider: "gemini", model, messages, system: system || null });
+  const hash = await sha256Hex(cacheBody);
+  const cacheKey = new Request(`https://cache.realaicost.internal/gemini/${hash}`, { method: "GET" });
+  const cache = caches.default;
+
+  const hit = await cache.match(cacheKey);
+  if (hit) {
+    const cached = await hit.json();
+    return json({ ...cached, cached: true, source: "api" }, { status: 200, headers: cors });
+  }
+
+  const url = `${GEMINI_BASE}/${encodeURIComponent(model)}:countTokens?key=${encodeURIComponent(env.GOOGLE_API_KEY)}`;
+  const body = toGeminiPayload({ messages, system });
+
+  let upstream;
+  try {
+    upstream = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch (e) {
+    return json(
+      { input_tokens: null, fallback: true, error: `upstream network: ${e.message || e}` },
+      { status: 200, headers: cors }
+    );
+  }
+
+  if (!upstream.ok) {
+    const text = await upstream.text().catch(() => "");
+    return json(
+      { input_tokens: null, fallback: true, error: `upstream ${upstream.status}: ${text.slice(0, 200)}` },
+      { status: 200, headers: cors }
+    );
+  }
+
+  let data;
+  try {
+    data = await upstream.json();
+  } catch {
+    return json(
+      { input_tokens: null, fallback: true, error: "upstream returned non-json" },
+      { status: 200, headers: cors }
+    );
+  }
+
+  // Gemini returns { totalTokens: N }
+  const result = { input_tokens: data.totalTokens ?? null, source: "api" };
+
+  const cachedResp = new Response(JSON.stringify(result), {
+    headers: {
+      "content-type": "application/json",
+      "cache-control": `public, max-age=${CACHE_TTL_SECONDS}`,
+    },
+  });
+  try { await cache.put(cacheKey, cachedResp.clone()); } catch {}
+
+  return json({ ...result, cached: false }, { status: 200, headers: cors });
+}

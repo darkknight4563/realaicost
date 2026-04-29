@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font="inter">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>TokenTruth — Print</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css?v=3"/>
+  <style>
+    /* Force dark chrome to print */
+    html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .topbar { position: static !important; backdrop-filter: none !important; }
+    .results { position: static !important; top: auto !important; }
+    .page { max-width: none; padding: 24px 32px 60px; }
+    .share-bar, .footer .mono:last-child, kbd { display: none; }
+    /* Disable animations for print stability */
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+
+    @page { size: letter portrait; margin: 0.4in; }
+    @media print {
+      html, body { background: #0A0E1A !important; }
+      .topbar { border-bottom: 1px solid var(--border); padding: 10px 16px; }
+      .page { padding: 16px 16px 24px; }
+      .hero { margin-bottom: 24px; }
+      h1.hero-title { font-size: 28px; }
+      p.hero-sub { font-size: 13px; }
+      .calc-grid { grid-template-columns: 1fr !important; gap: 14px; break-inside: avoid; }
+      .panel, .results, .recommendation, .warning { break-inside: avoid; }
+      .section-head { margin-top: 28px; break-before: page; }
+      #comparison { break-before: page; }
+      .about { break-before: page; margin-top: 20px; }
+      .cmp-table th, .cmp-table td { padding: 6px 8px; font-size: 10px; }
+      .model-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .token-input { min-height: 140px; }
+      .kpi.big .kpi-value { font-size: 28px; }
+      .warning-slider input[type="range"] { display: none; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="data.jsx"></script>
+  <script type="text/babel" src="tokenizer.jsx"></script>
+  <script type="text/babel" src="components.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+  <script type="text/babel">
+    (async () => {
+      try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e) {}
+      await new Promise(r => setTimeout(r, 900));
+      window.print();
+    })();
+  </script>
+</body>
+</html>
