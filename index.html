@@ -35,7 +35,7 @@
        the dynamic import() natively. Babel standalone transforms import() → require(),
        so we expose the loader as a global and call it from Babel-transpiled code. -->
   <script type="module">
-    window.__loadTiktoken = () => import("https://esm.sh/@dqbd/tiktoken?bundle&target=es2022");
+    window.__loadTiktoken = () => import("https://esm.sh/js-tiktoken@1.0.15?bundle&target=es2022");
   </script>
 
   <!-- React + Babel -->

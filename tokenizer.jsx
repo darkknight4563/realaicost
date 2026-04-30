@@ -63,8 +63,8 @@ function loadTiktoken() {
 async function getEncoder(encodingName) {
   if (encoderCache.has(encodingName)) return encoderCache.get(encodingName);
   const mod = await loadTiktoken();
-  // @dqbd/tiktoken exposes get_encoding(name) → encoder with .encode(text)
-  const enc = mod.get_encoding(encodingName);
+  // js-tiktoken exposes getEncoding(name) → encoder with .encode(text)
+  const enc = mod.getEncoding(encodingName);
   encoderCache.set(encodingName, enc);
   return enc;
 }
