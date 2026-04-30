@@ -12,7 +12,7 @@ export async function onRequestGet({ env }) {
       google: !!env.GOOGLE_API_KEY,
     },
     runtime: "cloudflare-pages-functions",
-    version: "v0.4.0",
+    version: "v0.4.1",
     timestamp: new Date().toISOString(),
   }, null, 2), {
     status: 200,

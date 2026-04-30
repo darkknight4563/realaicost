@@ -321,7 +321,7 @@ function App() {
 
       <footer className="footer">
         <div>
-          <div className="mono">RealAICost · v0.4.0 · exact tokenization</div>
+          <div className="mono">RealAICost · v0.4.1 · exact tokenization</div>
           <div>Not affiliated with any model provider. Prices checked April 2026; verify against vendor docs before committing.</div>
         </div>
         <div style={{ textAlign: "right" }}>

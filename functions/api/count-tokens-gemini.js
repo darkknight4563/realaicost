@@ -19,12 +19,17 @@ function json(body, init = {}) {
   });
 }
 
+const ALLOWED_ORIGINS = new Set([
+  "https://realaicost.com",
+  "https://www.realaicost.com",
+  "https://realaicost.pages.dev",
+]);
+
 function corsHeaders(request) {
   const origin = request.headers.get("origin") || "";
-  const url = new URL(request.url);
-  const sameOrigin = origin === `${url.protocol}//${url.host}`;
+  const allowed = ALLOWED_ORIGINS.has(origin);
   return {
-    "access-control-allow-origin": sameOrigin ? origin : url.origin,
+    "access-control-allow-origin": allowed ? origin : "https://realaicost.com",
     "access-control-allow-methods": "POST, OPTIONS",
     "access-control-allow-headers": "content-type",
     "vary": "origin",
