@@ -205,8 +205,10 @@ function AdvancedPanel({ s, setS, modelHasCache }) {
           <span className="sub">per response</span>
         </div>
         <input type="range" className="slider" min="0" max="8000" step="50"
+          aria-label="Expected output tokens (slider)"
           value={s.outputTokens} onChange={e => setS({ outputTokens: parseInt(e.target.value) })}/>
         <input type="number" className="num-input" value={s.outputTokens}
+          aria-label="Expected output tokens"
           onChange={e => setS({ outputTokens: parseInt(e.target.value) || 0 })}/>
       </div>
 
@@ -216,8 +218,10 @@ function AdvancedPanel({ s, setS, modelHasCache }) {
           <span className="sub">volume estimate</span>
         </div>
         <input type="range" className="slider" min="0" max="100000" step="100"
+          aria-label="Requests per day (slider)"
           value={Math.min(100000, s.requestsPerDay)} onChange={e => setS({ requestsPerDay: parseInt(e.target.value) })}/>
         <input type="number" className="num-input" value={s.requestsPerDay}
+          aria-label="Requests per day"
           onChange={e => setS({ requestsPerDay: parseInt(e.target.value) || 0 })}/>
       </div>
 
@@ -228,10 +232,12 @@ function AdvancedPanel({ s, setS, modelHasCache }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button className="toggle" role="switch" aria-checked={s.cacheOn} disabled={!modelHasCache}
+            aria-label="Enable prompt caching"
             onClick={() => setS({ cacheOn: !s.cacheOn })}/>
           {s.cacheOn && modelHasCache && (
             <>
               <input type="range" className="slider" min="0" max="100" step="1" style={{ flex: 1, minWidth: 120 }}
+                aria-label="Cache hit percentage"
                 value={s.cachePct} onChange={e => setS({ cachePct: parseInt(e.target.value) })}/>
               <span className="row-value">{s.cachePct}%</span>
             </>
@@ -246,6 +252,7 @@ function AdvancedPanel({ s, setS, modelHasCache }) {
           <span className="sub">50% off, async processing</span>
         </div>
         <div><button className="toggle" role="switch" aria-checked={s.batch}
+          aria-label="Enable Batch API discount"
           onClick={() => setS({ batch: !s.batch })}/></div>
         <div className="row-value">{s.batch ? "−50%" : "off"}</div>
       </div>
@@ -262,6 +269,7 @@ function OpusWarning({ mult, setMult, usingApi }) {
         <strong>Opus 4.7 uses a new tokenizer.</strong> It produces 1.0–1.46× more tokens than Opus 4.6 for the same text — more verbose on code, JSON, and non-English. {usingApi ? "You're getting exact counts from Anthropic's API, so the multiplier below is informational only." : "We apply a 1.2× average multiplier by default. Adjust if you've measured your own ratio."}
         <div className="warning-slider" style={usingApi ? { opacity: 0.5 } : {}}>
           <input type="range" className="slider" min="1.0" max="1.46" step="0.01"
+            aria-label="Opus 4.7 token multiplier"
             value={mult} disabled={usingApi}
             onChange={e => setMult(parseFloat(e.target.value))}/>
           <span className="mono" style={{ fontSize: 12, color: "var(--warn)" }}>

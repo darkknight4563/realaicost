@@ -180,7 +180,7 @@ function App() {
           <a href="#comparison">Compare</a>
           <a href="#about">About</a>
           <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
-          <button className="icon-btn" onClick={() => tweaks.setKeys({ theme: tweaks.values.theme === "dark" ? "light" : "dark" })} title="Toggle theme">
+          <button className="icon-btn" onClick={() => tweaks.setKeys({ theme: tweaks.values.theme === "dark" ? "light" : "dark" })} title="Toggle theme" aria-label="Toggle dark mode">
             {tweaks.values.theme === "dark" ? <IconSun size={14}/> : <IconMoon size={14}/>}
           </button>
         </div>
@@ -249,7 +249,7 @@ function App() {
             {/* Share */}
             <div className="share-bar">
               <span style={{ color: "var(--text-faint)" }}>#</span>
-              <input className="share-url" value={location.href} readOnly onFocus={e => e.target.select()}/>
+              <input className="share-url" value={location.href} readOnly onFocus={e => e.target.select()} aria-label="Shareable calculation URL"/>
               <button className="share-copy" onClick={copyURL}>
                 {copied ? <><IconCheck size={10}/> copied</> : <><IconCopy size={10}/> copy link</>}
               </button>
@@ -321,7 +321,7 @@ function App() {
 
       <footer className="footer">
         <div>
-          <div className="mono">RealAICost · v0.3.5 · exact tokenization</div>
+          <div className="mono">RealAICost · v0.4.0 · exact tokenization</div>
           <div>Not affiliated with any model provider. Prices checked April 2026; verify against vendor docs before committing.</div>
         </div>
         <div style={{ textAlign: "right" }}>

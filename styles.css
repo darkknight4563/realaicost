@@ -6,7 +6,7 @@
   --border-strong: #2a3a5c;
   --text: #E8EAED;
   --text-dim: #9098a8;
-  --text-faint: #5e6678;
+  --text-faint: #8b93a8;
   --accent: #4ECDC4;
   --accent-ink: #0A0E1A;
   --warn: #FFB86B;
@@ -24,7 +24,7 @@ html[data-theme="light"] {
   --border-strong: #d0cdc4;
   --text: #111418;
   --text-dim: #5a6273;
-  --text-faint: #8b91a1;
+  --text-faint: #6c7385;
   --accent: #0aa89f;
   --accent-ink: #ffffff;
   --warn: #b35f00;
