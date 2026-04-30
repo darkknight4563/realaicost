@@ -67,13 +67,25 @@ export async function onRequestPost({ request, env }) {
     return json({ input_tokens: null, fallback: true, error: "invalid json" }, { status: 200, headers: cors });
   }
 
-  const { model, messages, system } = payload || {};
-  if (!model || !Array.isArray(messages)) {
+  const { model: rawModel, messages, system } = payload || {};
+  if (!rawModel || !Array.isArray(messages)) {
     return json(
       { input_tokens: null, fallback: true, error: "missing model or messages[]" },
       { status: 200, headers: cors }
     );
   }
+
+  // Normalize short IDs (e.g. "opus-4-7") to the full Claude alias the API accepts.
+  const CLAUDE_ID_MAP = {
+    "opus-4-7":   "claude-opus-4-7",
+    "opus-4-6":   "claude-opus-4-6",
+    "sonnet-4-5": "claude-sonnet-4-5",
+    "haiku-4-5":  "claude-haiku-4-5",
+    "sonnet-3-7": "claude-sonnet-3-7",
+    "sonnet-3-5": "claude-sonnet-3-5",
+    "haiku-3-5":  "claude-haiku-3-5",
+  };
+  const model = CLAUDE_ID_MAP[rawModel] ?? rawModel;
 
   // Total text length guard — sum content across messages + system.
   let textChars = (typeof system === "string" ? system.length : 0);

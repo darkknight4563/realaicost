@@ -76,13 +76,23 @@ export async function onRequestPost({ request, env }) {
     return json({ input_tokens: null, fallback: true, error: "invalid json" }, { status: 200, headers: cors });
   }
 
-  const { model, messages, system } = payload || {};
-  if (!model || !Array.isArray(messages)) {
+  const { model: rawModel, messages, system } = payload || {};
+  if (!rawModel || !Array.isArray(messages)) {
     return json(
       { input_tokens: null, fallback: true, error: "missing model or messages[]" },
       { status: 200, headers: cors }
     );
   }
+
+  // Normalize dash-separated IDs (e.g. "gemini-2-5-pro") to dot-separated API IDs.
+  const GEMINI_ID_MAP = {
+    "gemini-2-5-pro":   "gemini-2.5-pro",
+    "gemini-2-5-flash": "gemini-2.5-flash",
+    "gemini-2-0-flash": "gemini-2.0-flash",
+    "gemini-1-5-pro":   "gemini-1.5-pro",
+    "gemini-1-5-flash": "gemini-1.5-flash",
+  };
+  const model = GEMINI_ID_MAP[rawModel] ?? rawModel;
 
   let textChars = (typeof system === "string" ? system.length : 0);
   for (const m of messages) {
