@@ -49,9 +49,8 @@ const encoderCache = new Map(); // encoding name → encoder instance
 
 function loadTiktoken() {
   if (!tiktokenModulePromise) {
-    // ?bundle&target=es2022 forces esm.sh to emit a fully-bundled ES2022 build,
-    // avoiding any stray CommonJS require() shims that can leak through the default URL.
-    tiktokenModulePromise = import("https://esm.sh/js-tiktoken@1.0.15?bundle&target=es2022").catch(err => {
+    // @dqbd/tiktoken is pure-ESM WASM with no CJS shims — avoids "require is not defined" in browsers.
+    tiktokenModulePromise = import("https://esm.sh/@dqbd/tiktoken?bundle&target=es2022").catch(err => {
       tiktokenModulePromise = null;  // allow retry
       throw err;
     });
@@ -62,8 +61,8 @@ function loadTiktoken() {
 async function getEncoder(encodingName) {
   if (encoderCache.has(encodingName)) return encoderCache.get(encodingName);
   const mod = await loadTiktoken();
-  // js-tiktoken exposes getEncoding(name) → encoder with .encode(text)
-  const enc = mod.getEncoding(encodingName);
+  // @dqbd/tiktoken exposes get_encoding(name) → encoder with .encode(text)
+  const enc = mod.get_encoding(encodingName);
   encoderCache.set(encodingName, enc);
   return enc;
 }

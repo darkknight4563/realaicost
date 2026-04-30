@@ -79,6 +79,7 @@ export async function onRequestPost({ request, env }) {
   const CLAUDE_ID_MAP = {
     "opus-4-7":   "claude-opus-4-7",
     "opus-4-6":   "claude-opus-4-6",
+    "sonnet-4-6": "claude-sonnet-4-6",
     "sonnet-4-5": "claude-sonnet-4-5",
     "haiku-4-5":  "claude-haiku-4-5",
     "sonnet-3-7": "claude-sonnet-3-7",

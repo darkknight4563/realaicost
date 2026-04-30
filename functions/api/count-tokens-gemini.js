@@ -86,11 +86,14 @@ export async function onRequestPost({ request, env }) {
 
   // Normalize dash-separated IDs (e.g. "gemini-2-5-pro") to dot-separated API IDs.
   const GEMINI_ID_MAP = {
-    "gemini-2-5-pro":   "gemini-2.5-pro",
-    "gemini-2-5-flash": "gemini-2.5-flash",
-    "gemini-2-0-flash": "gemini-2.0-flash",
-    "gemini-1-5-pro":   "gemini-1.5-pro",
-    "gemini-1-5-flash": "gemini-1.5-flash",
+    "gemini-3-1-pro":        "gemini-3.1-pro-preview",
+    "gemini-3-flash":        "gemini-3-flash-preview",
+    "gemini-2-5-pro":        "gemini-2.5-pro",
+    "gemini-2-5-flash":      "gemini-2.5-flash",
+    "gemini-2-5-flash-lite": "gemini-2.5-flash-lite",
+    "gemini-2-0-flash":      "gemini-2.0-flash",
+    "gemini-1-5-pro":        "gemini-1.5-pro",
+    "gemini-1-5-flash":      "gemini-1.5-flash",
   };
   const model = GEMINI_ID_MAP[rawModel] ?? rawModel;
 
