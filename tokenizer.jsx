@@ -49,8 +49,10 @@ const encoderCache = new Map(); // encoding name → encoder instance
 
 function loadTiktoken() {
   if (!tiktokenModulePromise) {
-    // @dqbd/tiktoken is pure-ESM WASM with no CJS shims — avoids "require is not defined" in browsers.
-    tiktokenModulePromise = import("https://esm.sh/@dqbd/tiktoken?bundle&target=es2022").catch(err => {
+    // window.__loadTiktoken is defined in index.html as a native type="module" script.
+    // Calling it here keeps the dynamic import() out of Babel's transform pipeline,
+    // which would otherwise convert import() → require() (failing in browsers).
+    tiktokenModulePromise = window.__loadTiktoken().catch(err => {
       tiktokenModulePromise = null;  // allow retry
       throw err;
     });
