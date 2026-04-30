@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font="inter">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Blog — RealAICost</title>
+  <meta name="description" content="Honest writeups on LLM pricing, tokenization, and the math behind production AI bills."/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ER%3C/text%3E%3C/svg%3E"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../styles.css?v=7"/>
+  <style>
+    .blog-index { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .blog-index h1 { font-size: 32px; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 8px; }
+    .blog-index .lede { color: var(--text-dim); font-size: 16px; line-height: 1.6; margin: 0 0 36px; max-width: 560px; }
+    .post-list { display: flex; flex-direction: column; gap: 24px; margin-top: 32px; }
+    .post-card { padding: 22px 24px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-raised); text-decoration: none; display: block; transition: border-color 160ms; }
+    .post-card:hover { border-color: var(--border-strong); }
+    .post-card .post-meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.05em; margin-bottom: 8px; }
+    .post-card h2 { font-size: 19px; font-weight: 600; color: var(--text); margin: 0 0 6px; line-height: 1.3; }
+    .post-card p { font-size: 14px; color: var(--text-dim); line-height: 1.55; margin: 0; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" style="text-decoration:none">
+      <div class="brand">
+        <div class="brand-mark">R</div>
+        <span class="brand-name">RealAICost</span>
+        <span class="brand-slash">/</span>
+        <span class="brand-sub">blog</span>
+      </div>
+    </a>
+    <div class="topbar-links">
+      <a href="/#comparison">Compare</a>
+      <a href="/#about">About</a>
+      <a href="https://github.com/darkknight4563/realaicost" target="_blank" rel="noreferrer">GitHub</a>
+    </div>
+  </header>
+
+  <main class="blog-index">
+    <h1>Writeups</h1>
+    <p class="lede">Honest analysis of LLM pricing, tokenization quirks, and the actual cost of running models in production.</p>
+
+    <div class="post-list">
+      <a href="/blog/gpt-5-5-cost-tax/" class="post-card">
+        <div class="post-meta">APR 30, 2026 · 3 MIN READ · PRICING</div>
+        <h2>GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job. Here's the Math.</h2>
+        <p>OpenAI shipped GPT-5.5 with a quiet 2× price hike on input and output. Both models use the same tokenizer. Here's what that does to a 30,000-request-per-month workload, and when it's worth paying.</p>
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <div class="mono">RealAICost · v0.5.0 · launch-ready</div>
+      <div>Not affiliated with any model provider. Prices checked April 30, 2026.</div>
+    </div>
+  </footer>
+</body>
+</html>

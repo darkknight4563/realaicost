@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font="inter">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job — RealAICost</title>
+  <meta name="description" content="OpenAI shipped GPT-5.5 with a quiet 2× price hike. Here's the math, with computed dollar amounts across 30k production requests."/>
+  <meta name="theme-color" content="#0A0E1A"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ER%3C/text%3E%3C/svg%3E"/>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job"/>
+  <meta property="og:description" content="OpenAI shipped GPT-5.5 with a quiet 2× price hike. We ran the math across 30k production requests."/>
+  <meta property="og:url" content="https://realaicost.com/blog/gpt-5-5-cost-tax/"/>
+  <meta property="og:image" content="https://realaicost.com/blog/gpt-5-5-cost-tax/og.svg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="GPT-5.5 Costs 2× More Than GPT-5.4"/>
+  <meta name="twitter:description" content="A quiet 2× price hike, with computed numbers across 30k production requests."/>
+  <meta name="twitter:image" content="https://realaicost.com/blog/gpt-5-5-cost-tax/og.svg"/>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../../styles.css?v=7"/>
+
+  <style>
+    .blog-page { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .blog-back { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+    .blog-back:hover { color: var(--text-dim); }
+    .blog-meta { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); margin: 28px 0 8px; letter-spacing: 0.04em; }
+    .blog-title { font-size: 36px; line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 14px; text-wrap: balance; }
+    .blog-subtitle { font-size: 17px; line-height: 1.5; color: var(--text-dim); margin: 0 0 36px; text-wrap: pretty; }
+    .blog-body { font-size: 16px; line-height: 1.75; color: var(--text); }
+    .blog-body p { margin: 0 0 18px; }
+    .blog-body h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin: 44px 0 14px; }
+    .blog-body h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
+    .blog-body code { font-family: var(--font-mono); font-size: 13.5px; background: var(--bg-elev); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+    .blog-body strong { color: var(--text); font-weight: 600; }
+    .blog-body ul { padding-left: 20px; margin: 0 0 18px; }
+    .blog-body li { margin-bottom: 8px; }
+    .blog-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+    .blog-body a:hover { border-bottom-color: var(--accent); }
+    .blog-table { width: 100%; border-collapse: collapse; margin: 8px 0 24px; font-size: 14px; }
+    .blog-table th, .blog-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+    .blog-table th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); font-weight: 500; }
+    .blog-table td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+    .blog-table tr.highlight td { background: color-mix(in srgb, var(--warn) 7%, transparent); }
+    .cta-box { margin: 56px 0 0; padding: 28px 28px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); }
+    .cta-box h3 { font-size: 18px; margin: 0 0 6px; color: var(--text); }
+    .cta-box p { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin: 0 0 14px; }
+    .cta-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 14px; text-decoration: none; border-bottom: none; }
+    .cta-link:hover { filter: brightness(1.05); border-bottom-color: transparent; }
+    .footer-note { margin-top: 48px; font-size: 12px; color: var(--text-faint); line-height: 1.6; padding-top: 24px; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" style="text-decoration:none">
+      <div class="brand">
+        <div class="brand-mark">R</div>
+        <span class="brand-name">RealAICost</span>
+        <span class="brand-slash">/</span>
+        <span class="brand-sub">blog</span>
+      </div>
+    </a>
+    <div class="topbar-links">
+      <a href="/#comparison">Compare</a>
+      <a href="/#about">About</a>
+      <a href="https://github.com/darkknight4563/realaicost" target="_blank" rel="noreferrer">GitHub</a>
+    </div>
+  </header>
+
+  <main class="blog-page">
+    <a href="/blog/" class="blog-back">← All posts</a>
+
+    <div class="blog-meta">April 30, 2026 · 3 min read · Pricing</div>
+    <h1 class="blog-title">GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job. Here's the Math.</h1>
+    <p class="blog-subtitle">OpenAI shipped GPT-5.5 last week with a quiet 2× price hike on input and output. Both models use the same tokenizer. Here's what that actually does to the bill on a 30,000-request-per-month workload, and when it's worth paying.</p>
+
+    <div class="blog-body">
+      <p>
+        Running a 30,000-request-per-month chatbot on <strong>GPT-5.5 costs $478/month</strong>. The same workload on <strong>GPT-5.4 costs $239/month</strong>. Both produce roughly equivalent quality on the kind of work most chatbots actually do — Q&A, summarization, classification, light reasoning.
+      </p>
+      <p>
+        The full 2× shows up because, unlike Anthropic's Opus 4.6 → 4.7 jump, there's no tokenizer change to soften or amplify it. GPT-5.4 and GPT-5.5 both use <code>o200k_base</code>. Same input text, same token count. Just twice the price per token.
+      </p>
+
+      <h2>The pricing change, in the open</h2>
+      <p>
+        OpenAI's pricing page tells the whole story:
+      </p>
+      <ul>
+        <li><strong>GPT-5.4</strong> (March 5, 2026): <code>$2.50</code> input / <code>$15.00</code> output per million tokens</li>
+        <li><strong>GPT-5.5</strong> (April 23, 2026): <code>$5.00</code> input / <code>$30.00</code> output per million tokens</li>
+      </ul>
+      <p>
+        That's a flat 2× on both sides. No tokenization shift, no context-window tier change, no cache-discount adjustment. The cache-read price moved with it: $0.25/M → $0.50/M, both 10% of base input.
+      </p>
+      <p>
+        For comparison, the other flagships landed in April:
+      </p>
+      <ul>
+        <li><strong>Claude Opus 4.7</strong>: $5 input / $25 output. Same input price as 5.5, $5 cheaper output.</li>
+        <li><strong>Gemini 3.1 Pro</strong>: $2 input / $12 output under 200K context, $4/$18 above.</li>
+      </ul>
+      <p>
+        GPT-5.5 isn't the most expensive flagship — Opus 4.7 ties on input — but it is the one that just doubled.
+      </p>
+
+      <h2>The real-world cost gap</h2>
+      <p>
+        Here's a typical production scenario: 30,000 requests/month, 500 input tokens, 500 output tokens, 70% prompt cache hit rate. Run through the same math the calculator uses:
+      </p>
+
+      <table class="blog-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th style="text-align:right">$ / request</th>
+            <th style="text-align:right">$ / month</th>
+            <th style="text-align:right">vs GPT-5.4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GPT-5.4</td>
+            <td class="num">$0.0080</td>
+            <td class="num">$239</td>
+            <td class="num">—</td>
+          </tr>
+          <tr>
+            <td>Claude Sonnet 4.6</td>
+            <td class="num">$0.0081</td>
+            <td class="num">$242</td>
+            <td class="num">+1%</td>
+          </tr>
+          <tr>
+            <td>Claude Opus 4.7</td>
+            <td class="num">$0.0134</td>
+            <td class="num">$403</td>
+            <td class="num">+69%</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>GPT-5.5</strong></td>
+            <td class="num">$0.0159</td>
+            <td class="num">$478</td>
+            <td class="num">+100%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        The Sonnet 4.6 number is the one to look at. <strong>Sonnet 4.6 lands within 1% of GPT-5.4's bill</strong> at this volume, and Anthropic publishes its own benchmark wins for routine tasks. If GPT-5.5 → Sonnet 4.6 is a viable swap for your workload, that's a $236/month difference per 30k requests, before you scale.
+      </p>
+
+      <h3>Hidden gotcha: context-tier pricing</h3>
+      <p>
+        Gemini 2.5 Pro and 3.1 Pro publish a single price, but quietly double over 200K input tokens. Gemini 2.5 Pro is $1.25/$10 below 200K, then $2.50/$15 above. The doubling applies to the <em>entire</em> prompt, not just the overage. If you're running a RAG pipeline that often blows past 200K with retrieved context, your bill is twice what the headline number implies. Switching to a Flash variant or to Claude (which keeps a flat rate to 1M tokens) is usually the right move.
+      </p>
+
+      <h3>What about cache disabled?</h3>
+      <p>
+        Removing prompt caching at this 500/500 token shape raises GPT-5.5's bill from $478 to $525 — about 10% more. The gap looks small here because output dominates a 500/500 request and output isn't cacheable. On long-context RAG prompts (say, 8K input / 500 output), removing caching widens the bill 2–3× because input is most of the cost. <strong>If your prompt is long, caching matters far more than the model choice.</strong>
+      </p>
+
+      <h2>When GPT-5.5 is worth paying for</h2>
+      <p>There are real cases where the premium pays for itself:</p>
+      <ul>
+        <li>Tasks where 5.4 measurably fails or hallucinates and 5.5 doesn't. Run an eval before assuming.</li>
+        <li>Multi-step reasoning where 5.5's per-step improvements compound across 5–10 steps.</li>
+        <li>Workflows you bill clients for, where model cost is sub-5% of the unit price. The marginal quality bump is free at that ratio.</li>
+      </ul>
+      <p>And cases where it isn't:</p>
+      <ul>
+        <li>High-volume chatbot Q&A. GPT-5.4 or Sonnet 4.6 is ~indistinguishable on this work.</li>
+        <li>Classification, extraction, JSON-mode transformations. Even Haiku 4.5 handles most of this for 1/30th the cost.</li>
+        <li>Anything where you're choosing 5.5 because it's newest, not because an eval told you to.</li>
+      </ul>
+
+      <h2>How to actually save money</h2>
+      <p>The pricing-page numbers are correct. They're also misleading because they assume you're not using the levers every vendor gives you:</p>
+      <ul>
+        <li><strong>Prompt caching</strong> drops the cached portion of input by 90%. Production workloads typically reuse a system prompt, tool definitions, and a context block — that's 60–90% of your input tokens, cacheable with one header. Most calculators ignore this.</li>
+        <li><strong>Batch API</strong> halves the entire request when you don't need a real-time response. Embarrassingly underused for any pipeline, eval run, or async classification job.</li>
+        <li><strong>Tier traps.</strong> Watch for context-tiered pricing on Gemini 2.5/3.1 Pro. If you're routinely over 200K, switch tiers or models before you get the bill.</li>
+        <li><strong>Tokenizer differences.</strong> The same English sentence is 1.0–1.35× more tokens on Claude Opus 4.7 vs Opus 4.6 (up to 1.46× on technical content like code and JSON). At identical sticker prices, this is a quiet 20–46% price hike for migrating up the Claude line.</li>
+      </ul>
+
+      <h2>Try the math yourself</h2>
+      <p>
+        We built RealAICost because every calculator we found stopped at sticker prices. It models exact tokenization for Claude, GPT, and Gemini (via official count APIs), prompt caching, batch discounts, and context-tier jumps across 16 production models. Paste your real prompt, set your real volume, see the real cost.
+      </p>
+
+      <div class="cta-box">
+        <h3>Run your prompt through all models</h3>
+        <p>No account, no tracking, no ads. Just the actual cost of running a request through every flagship model at once.</p>
+        <a href="https://realaicost.com" class="cta-link">Open the calculator →</a>
+      </div>
+
+      <div class="footer-note">
+        Prices verified against Anthropic, OpenAI, and Google official pricing pages on April 30, 2026. Calculations use the same <code>computeCost()</code> math as the live calculator. RealAICost is open source — code at <a href="https://github.com/darkknight4563/realaicost">github.com/darkknight4563/realaicost</a>. Not affiliated with any model provider.
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <div class="mono">RealAICost · v0.5.0 · launch-ready</div>
+      <div>Not affiliated with any model provider. Prices checked April 30, 2026.</div>
+    </div>
+  </footer>
+</body>
+</html>
