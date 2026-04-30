@@ -52,7 +52,8 @@
     .cta-box h3 { font-size: 18px; margin: 0 0 6px; color: var(--text); }
     .cta-box p { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin: 0 0 14px; }
     .cta-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 14px; text-decoration: none; border-bottom: none; }
-    .cta-link:hover { filter: brightness(1.05); border-bottom-color: transparent; }
+    .blog-body a.cta-link { color: var(--accent-ink); border-bottom: none; }
+    .blog-body a.cta-link:hover { filter: brightness(1.05); border-bottom: none; color: var(--accent-ink); }
     .footer-note { margin-top: 48px; font-size: 12px; color: var(--text-faint); line-height: 1.6; padding-top: 24px; border-top: 1px solid var(--border); }
   </style>
 </head>
@@ -156,18 +157,28 @@
         The Sonnet 4.6 number is the one to look at. <strong>Sonnet 4.6 lands within 1% of GPT-5.4's bill</strong> at this volume, and Anthropic publishes its own benchmark wins for routine tasks. If GPT-5.5 → Sonnet 4.6 is a viable swap for your workload, that's a $236/month difference per 30k requests, before you scale.
       </p>
 
-      <h3>Hidden gotcha: context-tier pricing</h3>
+      <h2>The context-tier pricing trap</h2>
       <p>
-        Gemini 2.5 Pro and 3.1 Pro publish a single price, but quietly double over 200K input tokens. Gemini 2.5 Pro is $1.25/$10 below 200K, then $2.50/$15 above. The doubling applies to the <em>entire</em> prompt, not just the overage. If you're running a RAG pipeline that often blows past 200K with retrieved context, your bill is twice what the headline number implies. Switching to a Flash variant or to Claude (which keeps a flat rate to 1M tokens) is usually the right move.
+        Gemini 2.5 Pro and 3.1 Pro publish a single price, but quietly double over 200K input tokens. Gemini 2.5 Pro is <code>$1.25</code> input / <code>$10</code> output below 200K, then <code>$2.50</code> / <code>$15</code> above. Gemini 3.1 Pro: <code>$2</code> / <code>$12</code> below, <code>$4</code> / <code>$18</code> above. The doubling applies to the <em>entire</em> prompt, not just the overage past 200K.
+      </p>
+      <p>
+        Concrete scenario. You're running a RAG pipeline over an internal knowledge base — say, your engineering wiki and a few months of Slack history. A typical request stitches together the user question, a system prompt, and the top-25 retrieved chunks at 8K tokens each. That's <strong>200K+ input tokens on roughly half your traffic</strong>. On Gemini 2.5 Pro at 30k requests/month with that mix:
+      </p>
+      <ul>
+        <li>Below-tier requests (15k/mo at ~50K tokens): <strong>$94/mo</strong></li>
+        <li>Above-tier requests (15k/mo at ~220K tokens): <strong>$825/mo</strong> — at the doubled rate</li>
+        <li><strong>Total: $919/mo</strong>, vs. the headline-rate calculation of $530/mo</li>
+      </ul>
+      <p>
+        That's a 73% surcharge nobody warned you about. The fix: switch to a Flash variant for long-context paths, or move to Claude Sonnet 4.6, which holds a flat <code>$3</code>/<code>$15</code> all the way to 1M tokens. RealAICost flags context-tiered models with a <code>tiered</code> badge and shows the second-tier price inline; the calculator applies the right rate automatically based on your prompt length.
       </p>
 
-      <h3>What about cache disabled?</h3>
+      <h2>When GPT-5.5 is worth paying for</h2>
       <p>
         Removing prompt caching at this 500/500 token shape raises GPT-5.5's bill from $478 to $525 — about 10% more. The gap looks small here because output dominates a 500/500 request and output isn't cacheable. On long-context RAG prompts (say, 8K input / 500 output), removing caching widens the bill 2–3× because input is most of the cost. <strong>If your prompt is long, caching matters far more than the model choice.</strong>
       </p>
 
-      <h2>When GPT-5.5 is worth paying for</h2>
-      <p>There are real cases where the premium pays for itself:</p>
+      <h2>What about cache disabled?</h2>
       <ul>
         <li>Tasks where 5.4 measurably fails or hallucinates and 5.5 doesn't. Run an eval before assuming.</li>
         <li>Multi-step reasoning where 5.5's per-step improvements compound across 5–10 steps.</li>
@@ -188,6 +199,19 @@
         <li><strong>Tier traps.</strong> Watch for context-tiered pricing on Gemini 2.5/3.1 Pro. If you're routinely over 200K, switch tiers or models before you get the bill.</li>
         <li><strong>Tokenizer differences.</strong> The same English sentence is 1.0–1.35× more tokens on Claude Opus 4.7 vs Opus 4.6 (up to 1.46× on technical content like code and JSON). At identical sticker prices, this is a quiet 20–46% price hike for migrating up the Claude line.</li>
       </ul>
+
+      <h2>How we calculated this</h2>
+      <p>
+        All numbers come from running each model's tokenizer over a representative 500-token chatbot prompt (system prompt + retrieved context + user question), then applying:
+      </p>
+      <ul>
+        <li><code>input_cost × (1 − cache_hit_rate) + cached_input_cost × cache_hit_rate</code></li>
+        <li><code>output_cost × output_tokens</code></li>
+        <li><code>× 30,000 requests/month</code></li>
+      </ul>
+      <p>
+        Tokenizers used: <code>o200k_base</code> for GPT models (via tiktoken), Anthropic's official <code>count_tokens</code> API for Claude, Google's <code>countTokens</code> API for Gemini. Code is in <a href="https://github.com/darkknight4563/realaicost">github.com/darkknight4563/realaicost</a> — cost function lives in <code>computeCost()</code> at <code>app.jsx:140</code>.
+      </p>
 
       <h2>Try the math yourself</h2>
       <p>
