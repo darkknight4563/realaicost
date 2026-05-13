@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font="inter">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Claude vs GPT Cost Comparison — Real Numbers, All Models</title>
+  <meta name="description" content="Side-by-side cost comparison of Claude (Opus 4.7, Sonnet 4.6, Haiku 4.5) vs GPT (5.5, 5.4, 5.4 mini) with exact tokenization and discount math."/>
+  <link rel="canonical" href="https://realaicost.com/compare/claude-vs-gpt/"/>
+  <meta name="theme-color" content="#0A0E1A"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ET%3C/text%3E%3C/svg%3E"/>
+
+  <meta property="og:title" content="Claude vs GPT Cost Comparison — Real Numbers, All Models"/>
+  <meta property="og:description" content="Side-by-side cost comparison of Claude (Opus 4.7, Sonnet 4.6, Haiku 4.5) vs GPT (5.5, 5.4, 5.4 mini) with exact tokenization and discount math."/>
+  <meta property="og:url" content="https://realaicost.com/compare/claude-vs-gpt/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://realaicost.com/og.png"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../../styles.css?v=7"/>
+  <link rel="stylesheet" href="../../landing.css"/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Claude or GPT cheaper for chatbots?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For typical chatbot workloads (30k req/mo, 500 tokens each direction, 70% caching), GPT-5.4 lands at ~$239/mo and Claude Sonnet 4.6 at ~$242/mo — essentially tied. GPT-5.5 doubles to ~$478/mo."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which is cheaper for long context?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude. Opus 4.7, Opus 4.6, and Sonnet 4.6 all support 1M context at flat pricing. Gemini 2.5 Pro doubles at 200K. GPT-5.5 supports 1M flat."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which has better prompt caching?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both offer 90% off cached input. Anthropic offers two cache durations (5-minute at 1.25× write, 1-hour at 2× write). OpenAI is simpler — one cache tier."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which is cheaper for batch processing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both offer 50% Batch API discounts. The cheaper choice depends on the base rates — Sonnet 4.6 batch ($1.50/$7.50) beats GPT-5.4 batch ($1.25/$7.50) on input, loses on output."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I use Claude or GPT for code generation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Different cost profile here: Claude Opus 4.7's tokenizer produces up to 46% more tokens on code. GPT-5.5 has lower tokenizer overhead on code but 2× the price. Run an eval on your codebase."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="module">
+    window.__loadTiktoken = () => import("https://esm.sh/js-tiktoken@1.0.15?bundle&target=es2022");
+  </script>
+  <!-- No __defaultModel — show default (Sonnet 4.6) so the comparison table is the focus -->
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <section class="landing-intro">
+    <nav class="landing-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">›</span>
+      <a href="/">Compare</a><span class="sep">›</span>
+      Claude vs GPT
+    </nav>
+
+    <h1>Compare Claude and GPT API costs</h1>
+
+    <p>
+      The question isn't "which is cheaper" — it's "which is cheaper for your specific workload." Claude and OpenAI price differently across input vs output, cache vs uncached, batch vs realtime. A workload that favors Sonnet 4.6 on input cost might favor GPT-5.4 on output. A workload with heavy caching might shift the answer entirely.
+    </p>
+    <p>
+      This calculator shows all current Claude and GPT models side-by-side on the same prompt and the same volume. Token counts are exact: tiktoken for OpenAI (client-side), Anthropic's count_tokens API for Claude. Pricing is verified against vendor pricing pages on the date shown.
+    </p>
+    <p>
+      Toggle prompt caching and Batch API to see how the comparison shifts under realistic production conditions.
+    </p>
+  </section>
+
+  <div id="root"></div>
+  <noscript>
+    <div class="noscript-box">
+      Enable JavaScript to use the interactive calculator.<br/>
+      The FAQ below is still readable without JS.
+    </div>
+  </noscript>
+
+  <section class="landing-faq">
+    <h2>Frequently asked questions</h2>
+
+    <details>
+      <summary>Is Claude or GPT cheaper for chatbots?</summary>
+      <div class="faq-answer">
+        For typical chatbot workloads (30k req/mo, 500 tokens each direction, 70% caching), GPT-5.4 lands at ~$239/mo and Claude Sonnet 4.6 at ~$242/mo — essentially tied. GPT-5.5 doubles to ~$478/mo.
+      </div>
+    </details>
+
+    <details>
+      <summary>Which is cheaper for long context?</summary>
+      <div class="faq-answer">
+        Claude. Opus 4.7, Opus 4.6, and Sonnet 4.6 all support 1M context at flat pricing. Gemini 2.5 Pro doubles at 200K. GPT-5.5 supports 1M flat.
+      </div>
+    </details>
+
+    <details>
+      <summary>Which has better prompt caching?</summary>
+      <div class="faq-answer">
+        Both offer 90% off cached input. Anthropic offers two cache durations (5-minute at 1.25× write, 1-hour at 2× write). OpenAI is simpler — one cache tier.
+      </div>
+    </details>
+
+    <details>
+      <summary>Which is cheaper for batch processing?</summary>
+      <div class="faq-answer">
+        Both offer 50% Batch API discounts. The cheaper choice depends on the base rates — Sonnet 4.6 batch ($1.50/$7.50) beats GPT-5.4 batch ($1.25/$7.50) on input, loses on output.
+      </div>
+    </details>
+
+    <details>
+      <summary>Should I use Claude or GPT for code generation?</summary>
+      <div class="faq-answer">
+        Different cost profile here: Claude Opus 4.7's tokenizer produces up to 46% more tokens on code. GPT-5.5 has lower tokenizer overhead on code but 2× the price. Run an eval on your codebase.
+      </div>
+    </details>
+  </section>
+
+  <section class="landing-related">
+    <h3>Related calculators</h3>
+    <div class="landing-related-grid">
+      <a href="/calculator/claude-opus-4-7-cost/">
+        Claude Opus 4.7 Cost Calculator
+        <span class="related-sub">Anthropic's flagship with the new tokenizer</span>
+      </a>
+      <a href="/calculator/gpt-5-5-cost/">
+        GPT-5.5 Cost Calculator
+        <span class="related-sub">OpenAI's new flagship at 2× the price</span>
+      </a>
+      <a href="/calculator/gemini-2-5-pro-cost/">
+        Gemini 2.5 Pro Cost Calculator
+        <span class="related-sub">Watch for the 200K tier pricing trap</span>
+      </a>
+      <a href="/calculator/llm-api-pricing/">
+        All LLM Pricing
+        <span class="related-sub">16 models from 5 providers in one table</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <div class="mono">RealAICost · v0.6.0</div>
+      <div>Not affiliated with any model provider. Prices checked April 2026.</div>
+    </div>
+  </footer>
+
+  <script type="text/babel" src="../../tweaks-panel.jsx"></script>
+  <script type="text/babel" src="../../data.jsx"></script>
+  <script type="text/babel" src="../../tokenizer.jsx"></script>
+  <script type="text/babel" src="../../components.jsx"></script>
+  <script type="text/babel" src="../../app.jsx"></script>
+</body>
+</html>

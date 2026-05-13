@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font="inter">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Gemini 2.5 Pro Cost Calculator — Including the 200K Tier Jump</title>
+  <meta name="description" content="Calculate Gemini 2.5 Pro costs with the hidden 200K tier doubling. We model both pricing tiers automatically based on your prompt length."/>
+  <link rel="canonical" href="https://realaicost.com/calculator/gemini-2-5-pro-cost/"/>
+  <meta name="theme-color" content="#0A0E1A"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ET%3C/text%3E%3C/svg%3E"/>
+
+  <meta property="og:title" content="Gemini 2.5 Pro Cost Calculator — Including the 200K Tier Jump"/>
+  <meta property="og:description" content="Calculate Gemini 2.5 Pro costs with the hidden 200K tier doubling. We model both pricing tiers automatically based on your prompt length."/>
+  <meta property="og:url" content="https://realaicost.com/calculator/gemini-2-5-pro-cost/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://realaicost.com/og.png"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../../styles.css?v=7"/>
+  <link rel="stylesheet" href="../../landing.css"/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much does Gemini 2.5 Pro cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "$1.25/M input and $10/M output for prompts under 200K tokens. Above 200K, it's $2.50/M input and $15/M output — applied to the entire prompt."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When does Gemini 2.5 Pro's pricing tier change?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "At 200,000 input tokens. The new rate applies to the whole prompt, not just tokens past 200K."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the 2M context window?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Gemini 2.5 Pro supports up to 2 million tokens. The pricing tier still kicks in at 200K — there's no third tier."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Gemini 2.5 Pro cheaper than Claude Sonnet 4.6?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under 200K input: yes, slightly. Above 200K: more expensive than Sonnet 4.6 which is flat at $3/$15 across all context lengths."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I switch to Gemini 2.5 Flash for long context?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Often yes. Flash is $0.30/M input flat (no tier jump) with 1M context. For RAG that exceeds 200K, Flash at flat pricing often beats Pro at tiered pricing."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="module">
+    window.__loadTiktoken = () => import("https://esm.sh/js-tiktoken@1.0.15?bundle&target=es2022");
+  </script>
+  <script>window.__defaultModel = "gemini-2-5-pro";</script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <section class="landing-intro">
+    <nav class="landing-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">›</span>
+      <a href="/">Calculators</a><span class="sep">›</span>
+      Gemini 2.5 Pro
+    </nav>
+
+    <h1>Calculate Gemini 2.5 Pro API costs</h1>
+
+    <p>
+      Gemini 2.5 Pro has a pricing trap most calculators ignore: at $1.25/$10 per million tokens under 200K input tokens, it's competitive with GPT-5.4 and Claude Sonnet. But the moment your prompt crosses 200K, the entire prompt — not just the overage — bills at the higher tier: $2.50/$15. For RAG pipelines that routinely stitch large context, this is a 73%+ surcharge nobody warned you about.
+    </p>
+    <p>
+      This calculator detects which tier applies based on your actual prompt length and applies the correct rate. We also model prompt caching (cached input drops to $0.10–$0.20/M) and the Batch API discount.
+    </p>
+    <p>
+      Verified against <a href="https://ai.google.dev/gemini-api/docs/pricing">ai.google.dev/pricing</a> on the date shown.
+    </p>
+  </section>
+
+  <div id="root"></div>
+  <noscript>
+    <div class="noscript-box">
+      Enable JavaScript to use the interactive calculator.<br/>
+      The FAQ below is still readable without JS.
+    </div>
+  </noscript>
+
+  <section class="landing-faq">
+    <h2>Frequently asked questions</h2>
+
+    <details>
+      <summary>How much does Gemini 2.5 Pro cost?</summary>
+      <div class="faq-answer">
+        $1.25/M input and $10/M output for prompts under 200K tokens. Above 200K, it's $2.50/M input and $15/M output — applied to the entire prompt.
+      </div>
+    </details>
+
+    <details>
+      <summary>When does Gemini 2.5 Pro's pricing tier change?</summary>
+      <div class="faq-answer">
+        At 200,000 input tokens. The new rate applies to the whole prompt, not just tokens past 200K.
+      </div>
+    </details>
+
+    <details>
+      <summary>What's the 2M context window?</summary>
+      <div class="faq-answer">
+        Gemini 2.5 Pro supports up to 2 million tokens. The pricing tier still kicks in at 200K — there's no third tier.
+      </div>
+    </details>
+
+    <details>
+      <summary>Is Gemini 2.5 Pro cheaper than Claude Sonnet 4.6?</summary>
+      <div class="faq-answer">
+        Under 200K input: yes, slightly. Above 200K: more expensive than Sonnet 4.6 which is flat at $3/$15 across all context lengths.
+      </div>
+    </details>
+
+    <details>
+      <summary>Should I switch to Gemini 2.5 Flash for long context?</summary>
+      <div class="faq-answer">
+        Often yes. Flash is $0.30/M input flat (no tier jump) with 1M context. For RAG that exceeds 200K, Flash at flat pricing often beats Pro at tiered pricing.
+      </div>
+    </details>
+  </section>
+
+  <section class="landing-related">
+    <h3>Related calculators</h3>
+    <div class="landing-related-grid">
+      <a href="/calculator/claude-opus-4-7-cost/">
+        Claude Opus 4.7 Cost Calculator
+        <span class="related-sub">Anthropic's flagship with the new tokenizer</span>
+      </a>
+      <a href="/calculator/gpt-5-5-cost/">
+        GPT-5.5 Cost Calculator
+        <span class="related-sub">OpenAI's new flagship at 2× the price</span>
+      </a>
+      <a href="/compare/claude-vs-gpt/">
+        Claude vs GPT Comparison
+        <span class="related-sub">All models side-by-side on your prompt</span>
+      </a>
+      <a href="/calculator/llm-api-pricing/">
+        All LLM Pricing
+        <span class="related-sub">16 models from 5 providers in one table</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <div class="mono">RealAICost · v0.6.0</div>
+      <div>Not affiliated with Google. Prices checked April 2026.</div>
+    </div>
+  </footer>
+
+  <script type="text/babel" src="../../tweaks-panel.jsx"></script>
+  <script type="text/babel" src="../../data.jsx"></script>
+  <script type="text/babel" src="../../tokenizer.jsx"></script>
+  <script type="text/babel" src="../../components.jsx"></script>
+  <script type="text/babel" src="../../app.jsx"></script>
+</body>
+</html>

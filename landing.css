@@ -1,0 +1,161 @@
+/* ── Landing page intro + FAQ sections (dark theme, matches calculator) ── */
+
+.landing-intro {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 32px 8px;
+}
+.landing-breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-bottom: 24px;
+  letter-spacing: 0.03em;
+}
+.landing-breadcrumb a {
+  color: var(--text-faint);
+  text-decoration: none;
+}
+.landing-breadcrumb a:hover { color: var(--text-dim); }
+.landing-breadcrumb .sep { margin: 0 6px; opacity: 0.5; }
+
+.landing-intro h1 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+.landing-intro p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-dim);
+  margin: 0 0 16px;
+}
+.landing-intro a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.landing-intro a:hover { border-bottom-color: var(--accent); }
+
+/* ── Noscript placeholder ── */
+.noscript-box {
+  max-width: 800px;
+  margin: 32px auto;
+  padding: 40px 32px;
+  text-align: center;
+  border: 1px dashed var(--border-strong);
+  border-radius: 12px;
+  color: var(--text-dim);
+  font-size: 15px;
+}
+
+/* ── FAQ section ── */
+.landing-faq {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 32px 16px;
+}
+.landing-faq h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+.landing-faq details {
+  border-bottom: 1px solid var(--border);
+}
+.landing-faq details:first-of-type {
+  border-top: 1px solid var(--border);
+}
+.landing-faq summary {
+  padding: 16px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.landing-faq summary::-webkit-details-marker { display: none; }
+.landing-faq summary::after {
+  content: "+";
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-faint);
+  flex-shrink: 0;
+  transition: transform 200ms;
+}
+.landing-faq details[open] summary::after {
+  content: "−";
+}
+.landing-faq .faq-answer {
+  padding: 0 0 16px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+.landing-faq .faq-answer code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--bg-elev);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* ── Related calculators ── */
+.landing-related {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 32px 48px;
+}
+.landing-related h3 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 500;
+  margin: 0 0 14px;
+}
+.landing-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.landing-related-grid a {
+  display: block;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-raised);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: border-color 160ms;
+}
+.landing-related-grid a:hover { border-color: var(--border-strong); }
+.landing-related-grid .related-sub {
+  display: block;
+  font-size: 12px;
+  color: var(--text-faint);
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .landing-intro { padding: 32px 20px 8px; }
+  .landing-intro h1 { font-size: 26px; }
+  .landing-faq { padding: 36px 20px 12px; }
+  .landing-related { padding: 24px 20px 40px; }
+}

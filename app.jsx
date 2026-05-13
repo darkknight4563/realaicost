@@ -38,7 +38,7 @@ function readURLState() {
     const p = new URLSearchParams(location.hash.slice(1));
     const get = (k, def) => p.get(k) ?? def;
     return {
-      model: get("m", "sonnet-4-6"),
+      model: get("m", window.__defaultModel ?? "sonnet-4-6"),
       outputTokens: parseInt(get("o", "500")) || 500,
       requestsPerDay: parseInt(get("r", "1000")) || 1000,
       cacheOn: get("c", "1") === "1",
@@ -319,9 +319,20 @@ function App() {
         </section>
       </main>
 
+      <section style={{ maxWidth: 900, margin: "0 auto", padding: "0 32px 40px" }}>
+        <div className="mono" style={{ fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-faint)", marginBottom: 14 }}>Specific calculators</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10 }}>
+          <a href="/calculator/claude-opus-4-7-cost/" style={{ display: "block", padding: "12px 14px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--bg-raised)", color: "var(--text)", textDecoration: "none", fontSize: 13, fontWeight: 500 }}>Claude Opus 4.7<br/><span style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 400 }}>New tokenizer cost impact</span></a>
+          <a href="/calculator/gpt-5-5-cost/" style={{ display: "block", padding: "12px 14px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--bg-raised)", color: "var(--text)", textDecoration: "none", fontSize: 13, fontWeight: 500 }}>GPT-5.5<br/><span style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 400 }}>2× price hike breakdown</span></a>
+          <a href="/calculator/gemini-2-5-pro-cost/" style={{ display: "block", padding: "12px 14px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--bg-raised)", color: "var(--text)", textDecoration: "none", fontSize: 13, fontWeight: 500 }}>Gemini 2.5 Pro<br/><span style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 400 }}>200K tier trap explained</span></a>
+          <a href="/compare/claude-vs-gpt/" style={{ display: "block", padding: "12px 14px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--bg-raised)", color: "var(--text)", textDecoration: "none", fontSize: 13, fontWeight: 500 }}>Claude vs GPT<br/><span style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 400 }}>Side-by-side comparison</span></a>
+          <a href="/calculator/llm-api-pricing/" style={{ display: "block", padding: "12px 14px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--bg-raised)", color: "var(--text)", textDecoration: "none", fontSize: 13, fontWeight: 500 }}>All LLMs<br/><span style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 400 }}>16 models, 5 providers</span></a>
+        </div>
+      </section>
+
       <footer className="footer">
         <div>
-          <div className="mono">RealAICost · v0.5.0 · launch-ready</div>
+          <div className="mono">RealAICost · v0.6.0</div>
           <div>Not affiliated with any model provider. Prices checked April 2026; verify against vendor docs before committing.</div>
         </div>
         <section className="recent-posts">

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font="inter">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>GPT-5.5 Cost Calculator — Real Pricing for OpenAI's New Flagship</title>
+  <meta name="description" content="Calculate GPT-5.5 API costs with exact tokenization, prompt caching, and Batch API math. Compare against GPT-5.4 to see when the 2× price hike is worth it."/>
+  <link rel="canonical" href="https://realaicost.com/calculator/gpt-5-5-cost/"/>
+  <meta name="theme-color" content="#0A0E1A"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ET%3C/text%3E%3C/svg%3E"/>
+
+  <meta property="og:title" content="GPT-5.5 Cost Calculator — Real Pricing for OpenAI's New Flagship"/>
+  <meta property="og:description" content="Calculate GPT-5.5 API costs with exact tokenization, prompt caching, and Batch API math. Compare against GPT-5.4 to see when the 2× price hike is worth it."/>
+  <meta property="og:url" content="https://realaicost.com/calculator/gpt-5-5-cost/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://realaicost.com/og.png"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../../styles.css?v=7"/>
+  <link rel="stylesheet" href="../../landing.css"/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much does GPT-5.5 cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "$5 per million input tokens, $30 per million output tokens. Cached input is $0.50/M."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is GPT-5.5 worth the upgrade from GPT-5.4?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For routine chatbot work (Q&A, summarization, classification), GPT-5.4 produces nearly identical output at half the price. Upgrade if you've benchmarked 5.4 failing on your specific task."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What context window does GPT-5.5 have?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1 million tokens. No tier pricing jump."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does GPT-5.5 support prompt caching?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, at 90% off the cached portion of input. Significant savings for production workloads with stable system prompts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I use GPT-5.5 or Claude Opus 4.7?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Similar capabilities at this tier. Opus 4.7 is $5/$25 vs GPT-5.5's $5/$30, making Opus marginally cheaper on output-heavy work. Run an eval on your specific task before committing."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="module">
+    window.__loadTiktoken = () => import("https://esm.sh/js-tiktoken@1.0.15?bundle&target=es2022");
+  </script>
+  <script>window.__defaultModel = "gpt-5-5";</script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- Static intro — renders with JS disabled -->
+  <section class="landing-intro">
+    <nav class="landing-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">›</span>
+      <a href="/">Calculators</a><span class="sep">›</span>
+      GPT-5.5
+    </nav>
+
+    <h1>Calculate GPT-5.5 API costs</h1>
+
+    <p>
+      GPT-5.5 launched April 23, 2026 at $5/M input and $30/M output — exactly 2× the prices of GPT-5.4 ($2.50/$15). Both use the same o200k_base tokenizer, so token counts are identical for the same text. This is a flat price hike, not a tokenization shift.
+    </p>
+    <p>
+      This calculator models the real-world cost. We tokenize your prompt with tiktoken (client-side, exact, no approximations), apply prompt caching at 90% off cached input, and optionally apply the 50% Batch API discount. The comparison table at the bottom shows GPT-5.5 against GPT-5.4, the Claude family, and the Gemini family.
+    </p>
+    <p>
+      Want the full analysis? Read our breakdown: <a href="/blog/gpt-5-5-cost-tax/">GPT-5.5 costs 2× more than GPT-5.4 for the same job</a>.
+    </p>
+  </section>
+
+  <!-- Calculator mounts here -->
+  <div id="root"></div>
+  <noscript>
+    <div class="noscript-box">
+      Enable JavaScript to use the interactive calculator.<br/>
+      The FAQ below is still readable without JS.
+    </div>
+  </noscript>
+
+  <!-- Static FAQ — renders with JS disabled -->
+  <section class="landing-faq">
+    <h2>Frequently asked questions</h2>
+
+    <details>
+      <summary>How much does GPT-5.5 cost?</summary>
+      <div class="faq-answer">
+        $5 per million input tokens, $30 per million output tokens. Cached input is $0.50/M.
+      </div>
+    </details>
+
+    <details>
+      <summary>Is GPT-5.5 worth the upgrade from GPT-5.4?</summary>
+      <div class="faq-answer">
+        For routine chatbot work (Q&A, summarization, classification), GPT-5.4 produces nearly identical output at half the price. Upgrade if you've benchmarked 5.4 failing on your specific task.
+      </div>
+    </details>
+
+    <details>
+      <summary>What context window does GPT-5.5 have?</summary>
+      <div class="faq-answer">
+        1 million tokens. No tier pricing jump.
+      </div>
+    </details>
+
+    <details>
+      <summary>Does GPT-5.5 support prompt caching?</summary>
+      <div class="faq-answer">
+        Yes, at 90% off the cached portion of input. Significant savings for production workloads with stable system prompts.
+      </div>
+    </details>
+
+    <details>
+      <summary>Should I use GPT-5.5 or Claude Opus 4.7?</summary>
+      <div class="faq-answer">
+        Similar capabilities at this tier. Opus 4.7 is $5/$25 vs GPT-5.5's $5/$30, making Opus marginally cheaper on output-heavy work. Run an eval on your specific task before committing.
+      </div>
+    </details>
+  </section>
+
+  <!-- Related calculators — cross-link mesh -->
+  <section class="landing-related">
+    <h3>Related calculators</h3>
+    <div class="landing-related-grid">
+      <a href="/calculator/claude-opus-4-7-cost/">
+        Claude Opus 4.7 Cost Calculator
+        <span class="related-sub">Same input price, cheaper output, new tokenizer</span>
+      </a>
+      <a href="/calculator/gemini-2-5-pro-cost/">
+        Gemini 2.5 Pro Cost Calculator
+        <span class="related-sub">Watch for the 200K tier pricing trap</span>
+      </a>
+      <a href="/compare/claude-vs-gpt/">
+        Claude vs GPT Comparison
+        <span class="related-sub">All models side-by-side on your prompt</span>
+      </a>
+      <a href="/calculator/llm-api-pricing/">
+        All LLM Pricing
+        <span class="related-sub">16 models from 5 providers in one table</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <div class="mono">RealAICost · v0.6.0</div>
+      <div>Not affiliated with OpenAI. Prices checked April 2026.</div>
+    </div>
+  </footer>
+
+  <script type="text/babel" src="../../tweaks-panel.jsx"></script>
+  <script type="text/babel" src="../../data.jsx"></script>
+  <script type="text/babel" src="../../tokenizer.jsx"></script>
+  <script type="text/babel" src="../../components.jsx"></script>
+  <script type="text/babel" src="../../app.jsx"></script>
+</body>
+</html>

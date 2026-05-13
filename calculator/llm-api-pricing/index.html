@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font="inter">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>LLM API Pricing Calculator — All Models, Real Costs</title>
+  <meta name="description" content="Compare API pricing across all major LLMs (Claude, GPT, Gemini, Llama, DeepSeek) with exact tokenization, caching, batch discounts, and tier jumps."/>
+  <link rel="canonical" href="https://realaicost.com/calculator/llm-api-pricing/"/>
+  <meta name="theme-color" content="#0A0E1A"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ET%3C/text%3E%3C/svg%3E"/>
+
+  <meta property="og:title" content="LLM API Pricing Calculator — All Models, Real Costs"/>
+  <meta property="og:description" content="Compare API pricing across all major LLMs (Claude, GPT, Gemini, Llama, DeepSeek) with exact tokenization, caching, batch discounts, and tier jumps."/>
+  <meta property="og:url" content="https://realaicost.com/calculator/llm-api-pricing/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://realaicost.com/og.png"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../../styles.css?v=7"/>
+  <link rel="stylesheet" href="../../landing.css"/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What's the cheapest LLM?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DeepSeek V3.2 at $0.14/$0.28 per million tokens — but it's a smaller model. Among flagships, Claude Sonnet 4.6 at $3/$15 offers the best capability-per-dollar."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the most expensive LLM?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "GPT-5.5 at $5/$30 (output dominates), then Claude Opus 4.7 at $5/$25."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does prompt caching change the math?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dramatically. For production workloads with stable system prompts (60-90% of tokens cacheable), caching can cut input costs by 80%+."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the Batch API?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "OpenAI, Anthropic, and Google all offer 50% off for async batch processing (results within 24 hours). Massively underused."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which LLM pricing calculator is most accurate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We use the vendors' official tokenizers (tiktoken for OpenAI, Anthropic's count_tokens API, Google's countTokens API) instead of character approximations. For Llama and DeepSeek, no free count API exists, so we use calibrated character approximations and flag those as estimated."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="module">
+    window.__loadTiktoken = () => import("https://esm.sh/js-tiktoken@1.0.15?bundle&target=es2022");
+  </script>
+  <!-- No __defaultModel — uses default Sonnet 4.6 -->
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <section class="landing-intro">
+    <nav class="landing-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">›</span>
+      <a href="/">Calculators</a><span class="sep">›</span>
+      All LLM Pricing
+    </nav>
+
+    <h1>Calculate LLM API costs across all models</h1>
+
+    <p>
+      Every major LLM provider publishes a per-token rate. None of them give you the real cost of running a workload. This calculator models the actual bill across 16 production models from Anthropic, OpenAI, Google, Meta, and DeepSeek — accounting for the things vendor pricing pages omit:
+    </p>
+    <ul>
+      <li><strong>Tokenizer differences</strong> — Opus 4.7 produces 1.0–1.46× more tokens than Opus 4.6 for the same English</li>
+      <li><strong>Context-tier pricing jumps</strong> — Gemini 2.5 Pro doubles above 200K input tokens</li>
+      <li><strong>Prompt caching</strong> — 90% off cached input, often 60–90% of production prompts</li>
+      <li><strong>Batch API</strong> — 50% off async workloads, ignored by most calculators</li>
+    </ul>
+    <p>
+      Paste your actual prompt. Set your real volume. See the real cost across all models in one comparison table.
+    </p>
+  </section>
+
+  <div id="root"></div>
+  <noscript>
+    <div class="noscript-box">
+      Enable JavaScript to use the interactive calculator.<br/>
+      The FAQ below is still readable without JS.
+    </div>
+  </noscript>
+
+  <section class="landing-faq">
+    <h2>Frequently asked questions</h2>
+
+    <details>
+      <summary>What's the cheapest LLM?</summary>
+      <div class="faq-answer">
+        DeepSeek V3.2 at $0.14/$0.28 per million tokens — but it's a smaller model. Among flagships, Claude Sonnet 4.6 at $3/$15 offers the best capability-per-dollar.
+      </div>
+    </details>
+
+    <details>
+      <summary>What's the most expensive LLM?</summary>
+      <div class="faq-answer">
+        GPT-5.5 at $5/$30 (output dominates), then Claude Opus 4.7 at $5/$25.
+      </div>
+    </details>
+
+    <details>
+      <summary>How does prompt caching change the math?</summary>
+      <div class="faq-answer">
+        Dramatically. For production workloads with stable system prompts (60–90% of tokens cacheable), caching can cut input costs by 80%+.
+      </div>
+    </details>
+
+    <details>
+      <summary>What's the Batch API?</summary>
+      <div class="faq-answer">
+        OpenAI, Anthropic, and Google all offer 50% off for async batch processing (results within 24 hours). Massively underused.
+      </div>
+    </details>
+
+    <details>
+      <summary>Which LLM pricing calculator is most accurate?</summary>
+      <div class="faq-answer">
+        We use the vendors' official tokenizers (tiktoken for OpenAI, Anthropic's count_tokens API, Google's countTokens API) instead of character approximations. For Llama and DeepSeek, no free count API exists, so we use calibrated character approximations and flag those as estimated.
+      </div>
+    </details>
+  </section>
+
+  <section class="landing-related">
+    <h3>Related calculators</h3>
+    <div class="landing-related-grid">
+      <a href="/calculator/claude-opus-4-7-cost/">
+        Claude Opus 4.7 Cost Calculator
+        <span class="related-sub">Anthropic's flagship with the new tokenizer</span>
+      </a>
+      <a href="/calculator/gpt-5-5-cost/">
+        GPT-5.5 Cost Calculator
+        <span class="related-sub">OpenAI's new flagship at 2× the price</span>
+      </a>
+      <a href="/calculator/gemini-2-5-pro-cost/">
+        Gemini 2.5 Pro Cost Calculator
+        <span class="related-sub">Watch for the 200K tier pricing trap</span>
+      </a>
+      <a href="/compare/claude-vs-gpt/">
+        Claude vs GPT Comparison
+        <span class="related-sub">All models side-by-side on your prompt</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <div class="mono">RealAICost · v0.6.0</div>
+      <div>Not affiliated with any model provider. Prices checked April 2026.</div>
+    </div>
+  </footer>
+
+  <script type="text/babel" src="../../tweaks-panel.jsx"></script>
+  <script type="text/babel" src="../../data.jsx"></script>
+  <script type="text/babel" src="../../tokenizer.jsx"></script>
+  <script type="text/babel" src="../../components.jsx"></script>
+  <script type="text/babel" src="../../app.jsx"></script>
+</body>
+</html>

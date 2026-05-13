@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font="inter">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Claude Opus 4.7 Cost Calculator — Real Pricing with Verified Tokenization</title>
+  <meta name="description" content="Calculate the real cost of running Claude Opus 4.7 with exact tokenization, the new tokenizer multiplier, and prompt caching math."/>
+  <link rel="canonical" href="https://realaicost.com/calculator/claude-opus-4-7-cost/"/>
+  <meta name="theme-color" content="#0A0E1A"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ET%3C/text%3E%3C/svg%3E"/>
+
+  <meta property="og:title" content="Claude Opus 4.7 Cost Calculator — Real Pricing with Verified Tokenization"/>
+  <meta property="og:description" content="Calculate the real cost of running Claude Opus 4.7 with exact tokenization, the new tokenizer multiplier, and prompt caching math."/>
+  <meta property="og:url" content="https://realaicost.com/calculator/claude-opus-4-7-cost/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://realaicost.com/og.png"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../../styles.css?v=7"/>
+  <link rel="stylesheet" href="../../landing.css"/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much does Claude Opus 4.7 cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "$5 per million input tokens, $25 per million output tokens. With prompt caching, cached input drops to $0.50 per million."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Opus 4.7 more expensive than Opus 4.6?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The sticker prices are identical. But Opus 4.7's tokenizer produces ~20% more tokens for prose and up to 46% more for code, meaning the same English prompt costs 20–46% more on 4.7."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Opus 4.7 support prompt caching?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Cache writes cost 1.25× input rate (5-minute) or 2× (1-hour). Cache reads cost 10% of input rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What context window does Opus 4.7 support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1 million tokens at flat pricing (no tier jump above 200K, unlike Gemini)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When is Opus 4.7 worth the cost over Sonnet 4.6?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For tasks where you've benchmarked and measured Sonnet failing. For routine work, Sonnet 4.6 at $3/$15 lands within 1% of GPT-5.4's bill."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="module">
+    window.__loadTiktoken = () => import("https://esm.sh/js-tiktoken@1.0.15?bundle&target=es2022");
+  </script>
+  <script>window.__defaultModel = "opus-4-7";</script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- Static intro — renders with JS disabled -->
+  <section class="landing-intro">
+    <nav class="landing-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">›</span>
+      <a href="/">Calculators</a><span class="sep">›</span>
+      Claude Opus 4.7
+    </nav>
+
+    <h1>Calculate Claude Opus 4.7 API costs</h1>
+
+    <p>
+      Claude Opus 4.7 is priced at $5/M input tokens and $25/M output tokens — the same sticker price as Opus 4.6. The catch: Opus 4.7 ships with a new tokenizer that produces 1.0–1.46× more tokens for the same English text. For code and JSON, the multiplier hits the upper end. At identical per-token prices, that's a quiet 20–46% price hike for anyone migrating up from Opus 4.6.
+    </p>
+    <p>
+      This calculator models the real cost. Paste your actual prompt — system message, RAG context, the works — and we'll tokenize it through Anthropic's official count_tokens API (no character approximations). Toggle prompt caching to see the 90% input discount applied to cached portions. Toggle the Batch API for the 50% async discount. Compare side-by-side against Opus 4.6, Sonnet 4.6, and Haiku 4.5 at the bottom.
+    </p>
+    <p>
+      All numbers verified against <a href="https://claude.com/pricing">claude.com/pricing</a> on the date shown. Code is open source. No accounts, no tracking, no ads.
+    </p>
+  </section>
+
+  <!-- Calculator mounts here -->
+  <div id="root"></div>
+  <noscript>
+    <div class="noscript-box">
+      Enable JavaScript to use the interactive calculator.<br/>
+      The FAQ below is still readable without JS.
+    </div>
+  </noscript>
+
+  <!-- Static FAQ — renders with JS disabled -->
+  <section class="landing-faq">
+    <h2>Frequently asked questions</h2>
+
+    <details>
+      <summary>How much does Claude Opus 4.7 cost?</summary>
+      <div class="faq-answer">
+        $5 per million input tokens, $25 per million output tokens. With prompt caching, cached input drops to $0.50 per million.
+      </div>
+    </details>
+
+    <details>
+      <summary>Is Opus 4.7 more expensive than Opus 4.6?</summary>
+      <div class="faq-answer">
+        The sticker prices are identical. But Opus 4.7's tokenizer produces ~20% more tokens for prose and up to 46% more for code, meaning the same English prompt costs 20–46% more on 4.7.
+      </div>
+    </details>
+
+    <details>
+      <summary>Does Opus 4.7 support prompt caching?</summary>
+      <div class="faq-answer">
+        Yes. Cache writes cost 1.25× input rate (5-minute) or 2× (1-hour). Cache reads cost 10% of input rate.
+      </div>
+    </details>
+
+    <details>
+      <summary>What context window does Opus 4.7 support?</summary>
+      <div class="faq-answer">
+        1 million tokens at flat pricing — no tier jump above 200K, unlike Gemini.
+      </div>
+    </details>
+
+    <details>
+      <summary>When is Opus 4.7 worth the cost over Sonnet 4.6?</summary>
+      <div class="faq-answer">
+        For tasks where you've benchmarked and measured Sonnet failing. For routine work, Sonnet 4.6 at $3/$15 lands within 1% of GPT-5.4's bill.
+      </div>
+    </details>
+  </section>
+
+  <!-- Related calculators — cross-link mesh -->
+  <section class="landing-related">
+    <h3>Related calculators</h3>
+    <div class="landing-related-grid">
+      <a href="/calculator/gpt-5-5-cost/">
+        GPT-5.5 Cost Calculator
+        <span class="related-sub">OpenAI's new flagship at 2× the price</span>
+      </a>
+      <a href="/calculator/gemini-2-5-pro-cost/">
+        Gemini 2.5 Pro Cost Calculator
+        <span class="related-sub">Watch for the 200K tier pricing trap</span>
+      </a>
+      <a href="/compare/claude-vs-gpt/">
+        Claude vs GPT Comparison
+        <span class="related-sub">All models side-by-side on your prompt</span>
+      </a>
+      <a href="/calculator/llm-api-pricing/">
+        All LLM Pricing
+        <span class="related-sub">16 models from 5 providers in one table</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <div class="mono">RealAICost · v0.6.0</div>
+      <div>Not affiliated with Anthropic. Prices checked April 2026.</div>
+    </div>
+  </footer>
+
+  <script type="text/babel" src="../../tweaks-panel.jsx"></script>
+  <script type="text/babel" src="../../data.jsx"></script>
+  <script type="text/babel" src="../../tokenizer.jsx"></script>
+  <script type="text/babel" src="../../components.jsx"></script>
+  <script type="text/babel" src="../../app.jsx"></script>
+</body>
+</html>
