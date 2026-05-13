@@ -313,6 +313,10 @@ p.hero-sub code { font-family: var(--font-mono); font-size: 14px; background: va
   color: var(--text-faint); font-size: 12px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
 }
 .footer .mono { color: var(--text-dim); }
+.recent-posts { flex: 1 1 100%; margin-top: 12px; }
+.recent-posts h3 { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); margin: 0 0 6px; font-weight: 500; }
+.recent-posts a { color: var(--accent); text-decoration: none; font-size: 13px; border-bottom: 1px solid transparent; }
+.recent-posts a:hover { border-bottom-color: var(--accent); }
 
 /* --- Font variant overrides from Tweaks --- */
 html[data-font="inter"] { --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif; --font-mono: "JetBrains Mono", "SF Mono", Menlo, monospace; }

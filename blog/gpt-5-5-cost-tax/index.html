@@ -87,7 +87,7 @@
 
     <div class="blog-body">
       <p>
-        Running a 30,000-request-per-month chatbot on <strong>GPT-5.5 costs $478/month</strong>. The same workload on <strong>GPT-5.4 costs $239/month</strong>. Both produce roughly equivalent quality on the kind of work most chatbots actually do — Q&A, summarization, classification, light reasoning.
+        Running a 30,000-request-per-month chatbot on <strong>GPT-5.5 costs $478/month</strong>. The same workload on <strong>GPT-5.4 costs $239/month</strong>. Both produce roughly equivalent quality on the kind of work most chatbots actually do — Q&A, summarization, classification, light reasoning. (You can verify these numbers with our <a href="/">real cost calculator</a>.)
       </p>
       <p>
         The full 2× shows up because, unlike Anthropic's Opus 4.6 → 4.7 jump, there's no tokenizer change to soften or amplify it. GPT-5.4 and GPT-5.5 both use <code>o200k_base</code>. Same input text, same token count. Just twice the price per token.
@@ -117,7 +117,7 @@
 
       <h2>The real-world cost gap</h2>
       <p>
-        Here's a typical production scenario: 30,000 requests/month, 500 input tokens, 500 output tokens, 70% prompt cache hit rate. Run through the same math the calculator uses:
+        Here's a typical production scenario: 30,000 requests/month, 500 input tokens, 500 output tokens, 70% prompt cache hit rate. Run through the same math our <a href="/">cost comparison tool</a> uses:
       </p>
 
       <table class="blog-table">
@@ -174,7 +174,7 @@
         <li><strong>Total: $919/mo</strong>, vs. the headline-rate calculation of $530/mo</li>
       </ul>
       <p>
-        That's a 73% surcharge nobody warned you about. The fix: switch to a Flash variant for long-context paths, or move to Claude Sonnet 4.6, which holds a flat <code>$3</code>/<code>$15</code> all the way to 1M tokens. RealAICost flags context-tiered models with a <code>tiered</code> badge and shows the second-tier price inline; the calculator applies the right rate automatically based on your prompt length.
+        That's a 73% surcharge nobody warned you about. The fix: switch to a Flash variant for long-context paths, or move to Claude Sonnet 4.6, which holds a flat <code>$3</code>/<code>$15</code> all the way to 1M tokens. RealAICost flags context-tiered models with a <code>tiered</code> badge and shows the second-tier price inline; the <a href="/">AI pricing calculator</a> applies the right rate automatically based on your prompt length.
       </p>
 
       <h2>When GPT-5.5 is worth paying for</h2>

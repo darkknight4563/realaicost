@@ -324,6 +324,12 @@ function App() {
           <div className="mono">RealAICost · v0.5.0 · launch-ready</div>
           <div>Not affiliated with any model provider. Prices checked April 2026; verify against vendor docs before committing.</div>
         </div>
+        <section className="recent-posts">
+          <h3>Recent analysis</h3>
+          <a href="/blog/gpt-5-5-cost-tax/">
+            GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job
+          </a>
+        </section>
         <div style={{ textAlign: "right" }}>
           <div className="mono">press <kbd style={{ border: "1px solid var(--border)", borderRadius: 4, padding: "1px 5px", fontFamily: "var(--font-mono)", fontSize: 11 }}>?</kbd> for tweaks</div>
         </div>
