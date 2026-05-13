@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-font="inter">
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="google-site-verification" content="5z7b52dQoGIM97TGpb5p24U8PTCmkQOeP_xcudmx55o"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job — RealAICost</title>
   <meta name="description" content="OpenAI shipped GPT-5.5 with a quiet 2× price hike on input and output. Same tokenizer. Same job. Half the bill if you stay on 5.4. Here's the math."/>
-  <meta name="theme-color" content="#0A0E1A"/>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ER%3C/text%3E%3C/svg%3E"/>
+  <meta name="theme-color" content="#ffffff"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2310b981'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%23fff'%3ER%3C/text%3E%3C/svg%3E"/>
 
   <!-- Open Graph -->
   <meta property="og:type" content="article"/>
@@ -28,62 +28,32 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 
-  <link rel="stylesheet" href="../../styles.css?v=7"/>
-
-  <style>
-    .blog-page { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
-    .blog-back { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
-    .blog-back:hover { color: var(--text-dim); }
-    .blog-meta { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); margin: 28px 0 8px; letter-spacing: 0.04em; }
-    .blog-title { font-size: 36px; line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 14px; text-wrap: balance; }
-    .blog-subtitle { font-size: 17px; line-height: 1.5; color: var(--text-dim); margin: 0 0 36px; text-wrap: pretty; }
-    .blog-body { font-size: 16px; line-height: 1.75; color: var(--text); }
-    .blog-body p { margin: 0 0 18px; }
-    .blog-body h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin: 44px 0 14px; }
-    .blog-body h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
-    .blog-body code { font-family: var(--font-mono); font-size: 13.5px; background: var(--bg-elev); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
-    .blog-body strong { color: var(--text); font-weight: 600; }
-    .blog-body ul { padding-left: 20px; margin: 0 0 18px; }
-    .blog-body li { margin-bottom: 8px; }
-    .blog-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
-    .blog-body a:hover { border-bottom-color: var(--accent); }
-    .blog-table { width: 100%; border-collapse: collapse; margin: 8px 0 24px; font-size: 14px; }
-    .blog-table th, .blog-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
-    .blog-table th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); font-weight: 500; }
-    .blog-table td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
-    .blog-table tr.highlight td { background: color-mix(in srgb, var(--warn) 7%, transparent); }
-    .cta-box { margin: 56px 0 0; padding: 28px 28px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); }
-    .cta-box h3 { font-size: 18px; margin: 0 0 6px; color: var(--text); }
-    .cta-box p { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin: 0 0 14px; }
-    .cta-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 14px; text-decoration: none; border-bottom: none; }
-    .blog-body a.cta-link { color: var(--accent-ink); border-bottom: none; }
-    .blog-body a.cta-link:hover { filter: brightness(1.05); border-bottom: none; color: var(--accent-ink); }
-    .footer-note { margin-top: 48px; font-size: 12px; color: var(--text-faint); line-height: 1.6; padding-top: 24px; border-top: 1px solid var(--border); }
-  </style>
+  <link rel="stylesheet" href="../blog.css"/>
 </head>
 <body>
-  <header class="topbar">
-    <a href="/" style="text-decoration:none">
-      <div class="brand">
-        <div class="brand-mark">R</div>
-        <span class="brand-name">RealAICost</span>
-        <span class="brand-slash">/</span>
-        <span class="brand-sub">blog</span>
-      </div>
+
+  <header class="blog-topbar">
+    <a href="/" class="blog-brand">
+      <div class="blog-brand-mark">R</div>
+      <span class="blog-brand-name">RealAICost</span>
+      <span class="blog-brand-slash">/</span>
+      <span class="blog-brand-sub">blog</span>
     </a>
-    <div class="topbar-links">
+    <nav class="blog-nav">
+      <a href="/">Calculator</a>
       <a href="/#comparison">Compare</a>
-      <a href="/#about">About</a>
       <a href="https://github.com/darkknight4563/realaicost" target="_blank" rel="noreferrer">GitHub</a>
-    </div>
+      <a href="/" class="cta-btn">Open calculator →</a>
+    </nav>
   </header>
 
-  <main class="blog-page">
+  <main class="blog-article">
     <a href="/blog/" class="blog-back">← All posts</a>
 
-    <div class="blog-meta">April 30, 2026 · 3 min read · Pricing</div>
-    <h1 class="blog-title">GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job. Here's the Math.</h1>
-    <p class="blog-subtitle">OpenAI shipped GPT-5.5 last week with a quiet 2× price hike on input and output. Both models use the same tokenizer. Here's what that actually does to the bill on a 30,000-request-per-month workload, and when it's worth paying.</p>
+    <div class="blog-article-label">Pricing</div>
+    <h1 class="blog-article-title">GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job. Here's the Math.</h1>
+    <p class="blog-article-subtitle">OpenAI shipped GPT-5.5 last week with a quiet 2× price hike on input and output. Both models use the same tokenizer. Here's what that actually does to the bill on a 30,000-request-per-month workload, and when it's worth paying.</p>
+    <div class="blog-article-meta">Apr 30, 2026 · 3 min read</div>
 
     <div class="blog-body">
       <p>
@@ -234,11 +204,10 @@
     </div>
   </main>
 
-  <footer class="footer">
-    <div>
-      <div class="mono">RealAICost · v0.5.0 · launch-ready</div>
-      <div>Not affiliated with any model provider. Prices checked April 30, 2026.</div>
-    </div>
+  <footer class="blog-footer">
+    <div>RealAICost · Not affiliated with any model provider.</div>
+    <div><a href="https://github.com/darkknight4563/realaicost" target="_blank" rel="noreferrer">Source on GitHub</a></div>
   </footer>
+
 </body>
 </html>
