@@ -332,12 +332,16 @@ function App() {
 
       <footer className="footer">
         <div>
-          <div className="mono">RealAICost · v0.6.0</div>
-          <div>Not affiliated with any model provider. Prices checked April 2026; verify against vendor docs before committing.</div>
+          <div className="mono">RealAICost · v0.7.0</div>
+          <div>Not affiliated with any model provider. Prices checked May 2026; verify against vendor docs before committing.</div>
         </div>
         <section className="recent-posts">
           <h3>Recent analysis</h3>
-          <a href="/blog/gpt-5-5-cost-tax/">
+          <a href="/blog/long-context-cost/">
+            The Hidden Cost of Long Context Windows
+          </a>
+          <br/>
+          <a href="/blog/gpt-5-5-cost-tax/" style={{ marginTop: 4, display: "inline-block" }}>
             GPT-5.5 Costs 2× More Than GPT-5.4 for the Same Job
           </a>
         </section>

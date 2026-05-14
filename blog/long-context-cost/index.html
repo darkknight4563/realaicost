@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="google-site-verification" content="5z7b52dQoGIM97TGpb5p24U8PTCmkQOeP_xcudmx55o"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>The Hidden Cost of Long Context Windows — Pricing Cliffs Explained</title>
+  <meta name="description" content="A 1M-token context window isn't 1M tokens at a flat rate. See what large prompts actually cost across Claude, GPT, and Gemini, including the tier cliffs that double your bill."/>
+  <link rel="canonical" href="https://realaicost.com/blog/long-context-cost/"/>
+  <meta name="theme-color" content="#ffffff"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2310b981'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%23fff'%3ER%3C/text%3E%3C/svg%3E"/>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="The Hidden Cost of Long Context Windows"/>
+  <meta property="og:description" content="A 1M-token context window isn't 1M tokens at a flat rate. The pricing cliffs nobody mentions, with exact math."/>
+  <meta property="og:url" content="https://realaicost.com/blog/long-context-cost/"/>
+  <meta property="og:image" content="https://realaicost.com/blog/long-context-cost/og.png"/>
+  <meta property="og:image:type" content="image/png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="The Hidden Cost of Long Context Windows"/>
+  <meta name="twitter:description" content="A 1M-token context window isn't 1M tokens at a flat rate. The pricing cliffs nobody mentions, with exact math."/>
+  <meta name="twitter:image" content="https://realaicost.com/blog/long-context-cost/og.png"/>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../blog.css"/>
+
+  <!-- BlogPosting JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "The Hidden Cost of Long Context Windows (And the Pricing Cliffs Nobody Mentions)",
+    "datePublished": "2026-05-14",
+    "dateModified": "2026-05-14",
+    "author": {
+      "@type": "Organization",
+      "name": "RealAICost"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "RealAICost",
+      "url": "https://realaicost.com"
+    },
+    "description": "A 1M-token context window isn't 1M tokens at a flat rate. See what large prompts actually cost across Claude, GPT, and Gemini, including the tier cliffs that double your bill.",
+    "mainEntityOfPage": "https://realaicost.com/blog/long-context-cost/",
+    "image": "https://realaicost.com/blog/long-context-cost/og.png"
+  }
+  </script>
+</head>
+<body>
+
+  <header class="blog-topbar">
+    <a href="/" class="blog-brand">
+      <div class="blog-brand-mark">R</div>
+      <span class="blog-brand-name">RealAICost</span>
+      <span class="blog-brand-slash">/</span>
+      <span class="blog-brand-sub">blog</span>
+    </a>
+    <nav class="blog-nav">
+      <a href="/">Calculator</a>
+      <a href="/#comparison">Compare</a>
+      <a href="https://github.com/darkknight4563/realaicost" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="/" class="cta-btn">Open calculator →</a>
+    </nav>
+  </header>
+
+  <main class="blog-article">
+    <a href="/blog/" class="blog-back">← All posts</a>
+
+    <div class="blog-article-label">Pricing</div>
+    <h1 class="blog-article-title">The Hidden Cost of Long Context Windows (And the Pricing Cliffs Nobody Mentions)</h1>
+    <p class="blog-article-subtitle">A 1M-token context window doesn't mean 1M tokens at a flat rate. Here's what large prompts actually cost across Claude, GPT, and Gemini — including the tier cliffs that double your bill mid-prompt.</p>
+    <div class="blog-article-meta">May 14, 2026 · 5 min read</div>
+
+    <div class="blog-body">
+
+      <p>
+        Send a 250,000-token prompt to Gemini 2.5 Pro and you'll pay $0.625. Send 200,000 tokens — 20% less text — and you'll pay $0.25. The smaller prompt is 60% cheaper, because crossing 200K tokens doesn't just bill the extra tokens at a higher rate. It re-bills the <em>entire</em> prompt at the higher tier.
+      </p>
+      <p>
+        Long context windows are sold as a convenience: dump your whole knowledge base in, skip the RAG pipeline. And sometimes that's the right call. But the pricing has cliffs, tiers, and tokenizer quirks that the marketing pages don't mention. This post walks through what large prompts actually cost — model by model, with the exact math — so you can see the cliffs before you hit them.
+      </p>
+
+      <h2>What you're actually paying for</h2>
+      <p>
+        The context window is a shared budget. Your system prompt, retrieved documents, conversation history, and the model's output all draw from it. Every token in that window is an input token you pay for, on <em>every request</em> — not amortized across sessions, not cached unless you explicitly set up caching.
+      </p>
+      <p>
+        A 1M-token context window is a capacity limit, not a pricing model. The price per token is set separately and varies by model and — on some providers — by how many tokens you actually send.
+      </p>
+      <p>
+        To ground this: at $3/M input (Claude Sonnet 4.6), a 100K-token prompt costs <strong>$0.30 per request</strong>. At 30,000 requests/month, that's <strong>$9,000/month in input alone</strong> — before output, before you've done anything clever. Context isn't free just because the window is large.
+      </p>
+
+      <h2>The pricing cliffs</h2>
+
+      <h3>Gemini 2.5 Pro / Gemini 3.1 Pro — the 200K cliff</h3>
+      <p>
+        Under 200K input tokens, Gemini 2.5 Pro charges <code>$1.25</code>/M input and <code>$10</code>/M output. Cross that threshold and the rate jumps to <code>$2.50</code>/M input and <code>$15</code>/M output.
+      </p>
+      <p>
+        The critical detail: the higher rate applies to the <strong>entire prompt</strong>, not just the tokens past 200K. A 199K-token prompt costs $0.249. A 201K-token prompt costs $0.503. Adding 1% more text doubled the bill.
+      </p>
+      <p>
+        Gemini 3.1 Pro has the same cliff structure: <code>$2</code>/<code>$12</code> under 200K, <code>$4</code>/<code>$18</code> above. You can model this precisely in the <a href="/calculator/gemini-2-5-pro-cost/">Gemini 2.5 Pro cost calculator</a> — it detects which tier applies based on your actual prompt length.
+      </p>
+
+      <h3>Claude — flat pricing, no cliff</h3>
+      <p>
+        Opus 4.7, Opus 4.6, and Sonnet 4.6 all support 1M context at <strong>flat per-token pricing</strong>. A 100K prompt and a 900K prompt bill at the same rate. No tiers, no thresholds, no re-billing.
+      </p>
+      <p>
+        This makes Claude the predictable choice for variable-length workloads. If your prompt size fluctuates — some requests pull 50K tokens of context, others pull 300K — you never hit a cliff that doubles a random subset of your traffic.
+      </p>
+
+      <h3>GPT-5.5 / GPT-5.4 — flat, but watch the tokenizer</h3>
+      <p>
+        OpenAI also prices flat across the 1M context window. No tier jumps. But <code>o200k_base</code> tokenizes differently than Claude's tokenizer. The same English document produces a different token count on each, which means the "same" prompt costs different amounts on different providers even at identical per-token rates.
+      </p>
+
+      <h3>The tokenizer multiplier — a cliff hiding inside the token count</h3>
+      <p>
+        Claude Opus 4.7's new tokenizer produces 1.0–1.46× more tokens than Opus 4.6 for the same text. For a 200K-token document measured on Opus 4.6's tokenizer, the same document might be 230K–290K tokens on Opus 4.7.
+      </p>
+      <p>
+        On Gemini, that kind of variance is the difference between staying under the 200K cliff and falling off it. This is the cliff nobody sees because it's upstream of the pricing page entirely — your document didn't get longer, your tokenizer just counted more tokens.
+      </p>
+
+      <h2>When long context beats RAG on cost</h2>
+      <p>
+        <strong>Long context wins when:</strong>
+      </p>
+      <ul>
+        <li><strong>Low-to-medium query volume</strong> (hundreds/day, not millions). RAG infrastructure cost — vector DB hosting at $50–300/mo, embedding costs, re-indexing pipelines — outweighs the per-query token premium.</li>
+        <li><strong>Content changes frequently.</strong> RAG needs re-embedding on every update. Long context reads the current version directly from the source.</li>
+        <li><strong>Single-document deep analysis.</strong> RAG's chunking fragments documents. Long context sees the whole thing, preserving cross-references and structure.</li>
+      </ul>
+      <p>
+        <strong>RAG wins when:</strong>
+      </p>
+      <ul>
+        <li><strong>High query volume at scale</strong> — per-query token savings compound across millions of requests.</li>
+        <li><strong>The corpus far exceeds what any single query needs</strong> — you'd be paying for tokens the model ignores.</li>
+        <li><strong>The corpus exceeds even a 1M window</strong> — RAG isn't optional, it's required.</li>
+      </ul>
+      <p>
+        The honest takeaway: it's not either/or, it's a volume-and-update-frequency calculation. Below roughly 1,000 queries/day on a moderately-sized corpus, long context is often cheaper all-in once you count infrastructure. Above that, RAG's per-query savings start to dominate.
+      </p>
+
+      <h2>How to keep long-context costs down</h2>
+      <p>
+        <strong>Prompt caching is the biggest lever.</strong> If your large context is stable — a knowledge base, a codebase, a doc set — cache it. Cached input drops to ~10% of input price. A 200K-token cached context goes from $0.60 to $0.06 per request on Sonnet 4.6.
+      </p>
+      <p>
+        <strong>Watch the tier threshold deliberately.</strong> If you're on Gemini and your prompts hover near 200K, either trim below the line or switch to a flat-priced model. The cliff is avoidable if you know it exists.
+      </p>
+      <p>
+        <strong>Batch API for async work.</strong> 50% off the entire request. Long-context batch jobs — overnight document processing, bulk analysis — are the ideal candidate for this discount.
+      </p>
+      <p>
+        <strong>Measure tokens on the actual model's tokenizer.</strong> A document that's "190K tokens" on one tokenizer may be 230K on another. That's the difference between one pricing tier and the next.
+      </p>
+      <p>
+        <strong>Don't pay for tokens the model ignores.</strong> The "lost in the middle" effect is well-documented — models attend less to mid-context information. Stuffing the window with marginally relevant content costs money <em>and</em> can lower answer quality. Be selective about what goes in.
+      </p>
+
+      <h2>How we calculated this</h2>
+      <p>
+        All figures use each model's official tokenizer (tiktoken for GPT via <code>o200k_base</code>, Anthropic's <code>count_tokens</code> API for Claude, Google's <code>countTokens</code> for Gemini) and pricing verified against vendor pricing pages on May 14, 2026. Tier thresholds and the entire-prompt re-billing behavior for Gemini are documented in Google's pricing docs. The same <code>computeCost()</code> function powers both this article and the live calculator. Code is open source — <a href="https://github.com/darkknight4563/realaicost">github.com/darkknight4563/realaicost</a>.
+      </p>
+
+      <p style="margin-top: 32px; font-size: 14px; color: var(--blog-text-dim);">
+        <strong>Related reading:</strong> <a href="/blog/gpt-5-5-cost-tax/">GPT-5.5 costs 2× more than GPT-5.4 for the same job</a> — the pricing math behind OpenAI's latest flagship.
+      </p>
+
+      <div class="cta-box">
+        <h3>See the cliffs on your actual prompt</h3>
+        <p>Paste your real context, set your real volume. The calculator detects which pricing tier applies and shows the cost across all 16 models — including the tier jumps.</p>
+        <a href="https://realaicost.com" class="cta-link">Open the calculator →</a>
+      </div>
+
+      <div class="footer-note">
+        Prices verified against Anthropic, OpenAI, and Google official pricing pages on May 14, 2026. Calculations use the same <code>computeCost()</code> math as the live calculator. RealAICost is open source — code at <a href="https://github.com/darkknight4563/realaicost">github.com/darkknight4563/realaicost</a>. Not affiliated with any model provider.
+      </div>
+    </div>
+  </main>
+
+  <footer class="blog-footer">
+    <div>RealAICost · Not affiliated with any model provider.</div>
+    <div><a href="https://github.com/darkknight4563/realaicost" target="_blank" rel="noreferrer">Source on GitHub</a></div>
+  </footer>
+
+</body>
+</html>

@@ -38,9 +38,15 @@
   </url>
   <url>
     <loc>https://realaicost.com/blog/</loc>
-    <lastmod>2026-04-30</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://realaicost.com/blog/long-context-cost/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://realaicost.com/blog/gpt-5-5-cost-tax/</loc>

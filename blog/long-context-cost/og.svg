@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0A0E1A"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="120" y1="380" x2="1080" y2="380" stroke="#1f2940" stroke-width="1"/>
+  <line x1="120" y1="300" x2="1080" y2="300" stroke="#1f2940" stroke-width="1"/>
+  <line x1="120" y1="220" x2="1080" y2="220" stroke="#1f2940" stroke-width="1"/>
+
+  <!-- Flat pricing line (left side — under 200K) -->
+  <line x1="120" y1="380" x2="580" y2="380" stroke="#4ECDC4" stroke-width="3"/>
+
+  <!-- The cliff — vertical jump at 200K -->
+  <line x1="580" y1="380" x2="580" y2="220" stroke="#ff6b6b" stroke-width="3" stroke-dasharray="8,4"/>
+
+  <!-- High tier line (right side — over 200K) -->
+  <line x1="580" y1="220" x2="1080" y2="220" stroke="#ff6b6b" stroke-width="3"/>
+
+  <!-- 200K marker -->
+  <line x1="580" y1="400" x2="580" y2="410" stroke="#8b93a8" stroke-width="1"/>
+  <text x="580" y="430" font-family="JetBrains Mono, monospace" font-size="13" fill="#8b93a8" text-anchor="middle">200K tokens</text>
+
+  <!-- Y-axis labels -->
+  <text x="110" y="385" font-family="JetBrains Mono, monospace" font-size="12" fill="#8b93a8" text-anchor="end">$1.25/M</text>
+  <text x="110" y="225" font-family="JetBrains Mono, monospace" font-size="12" fill="#8b93a8" text-anchor="end">$2.50/M</text>
+
+  <!-- Cliff annotation -->
+  <text x="620" y="305" font-family="JetBrains Mono, monospace" font-size="14" fill="#ff6b6b" font-weight="600">2x price cliff</text>
+
+  <!-- Dots at the cliff -->
+  <circle cx="580" cy="380" r="5" fill="#4ECDC4"/>
+  <circle cx="580" cy="220" r="5" fill="#ff6b6b"/>
+
+  <!-- X-axis labels -->
+  <text x="120" y="430" font-family="JetBrains Mono, monospace" font-size="12" fill="#8b93a8">0</text>
+  <text x="1080" y="430" font-family="JetBrains Mono, monospace" font-size="12" fill="#8b93a8" text-anchor="end">1M tokens</text>
+
+  <!-- Headline -->
+  <text x="120" y="80" font-family="Inter, sans-serif" font-size="42" fill="#E8EAED" font-weight="700" letter-spacing="-0.5">The hidden cost of long context</text>
+
+  <!-- Subtitle -->
+  <text x="120" y="120" font-family="Inter, sans-serif" font-size="20" fill="#9098a8">Pricing cliffs explained</text>
+
+  <!-- Brand -->
+  <rect x="1020" y="560" width="160" height="32" rx="6" fill="#141a2a"/>
+  <text x="1100" y="582" font-family="JetBrains Mono, monospace" font-size="13" fill="#4ECDC4" text-anchor="middle" font-weight="600">realaicost.com</text>
+</svg>
