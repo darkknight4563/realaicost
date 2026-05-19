@@ -58,9 +58,9 @@
   </script>
 
   <!-- React + Babel -->
-  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
+  <!-- Babel standalone removed — JSX files pre-compiled to plain JS -->
 </head>
 <body>
   <div id="root"></div>
@@ -73,10 +73,10 @@
     <p>Need help optimizing your prompts? Try our sister tool <a href="https://tokenadvisor.dev" style="color:#4ECDC4">TokenAdvisor</a> — paste your prompt, see where your tokens go, and get specific savings recommendations with dollar amounts at your volume.</p>
   </section>
 
-  <script type="text/babel" src="tweaks-panel.jsx"></script>
-  <script type="text/babel" src="data.jsx"></script>
-  <script type="text/babel" src="tokenizer.jsx"></script>
-  <script type="text/babel" src="components.jsx"></script>
-  <script type="text/babel" src="app.jsx"></script>
+  <script src="tweaks-panel.js"></script>
+  <script src="data.js"></script>
+  <script src="tokenizer.js"></script>
+  <script src="components.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

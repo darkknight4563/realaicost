@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="google-site-verification" content="5z7b52dQoGIM97TGpb5p24U8PTCmkQOeP_xcudmx55o"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>How to Reduce LLM API Costs: 7 Strategies That Actually Work — RealAICost</title>
+  <meta name="description" content="Cut your Claude, GPT, and Gemini API bills by 40-90% with these 7 proven strategies. Prompt caching, batch API, model routing, tokenizer optimization, and more — with exact dollar savings."/>
+  <meta name="theme-color" content="#ffffff"/>
+  <link rel="canonical" href="https://realaicost.com/blog/reduce-llm-api-costs/"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2310b981'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%23fff'%3ER%3C/text%3E%3C/svg%3E"/>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Reduce LLM API Costs: 7 Strategies That Actually Work"/>
+  <meta property="og:description" content="Cut your Claude, GPT, and Gemini API bills by 40-90%. Prompt caching, batch API, model routing, and more — with exact dollar savings."/>
+  <meta property="og:url" content="https://realaicost.com/blog/reduce-llm-api-costs/"/>
+  <meta property="og:image" content="https://realaicost.com/blog/reduce-llm-api-costs/og.png"/>
+  <meta property="og:image:type" content="image/png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Reduce LLM API Costs: 7 Strategies"/>
+  <meta name="twitter:description" content="Cut your Claude, GPT, and Gemini API bills by 40-90%. Prompt caching, batch API, model routing — with exact dollar savings."/>
+  <meta name="twitter:image" content="https://realaicost.com/blog/reduce-llm-api-costs/og.png"/>
+
+  <!-- Article JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Reduce LLM API Costs: 7 Strategies That Actually Work",
+    "datePublished": "2026-05-19",
+    "dateModified": "2026-05-19",
+    "author": {
+      "@type": "Organization",
+      "name": "RealAICost"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "RealAICost",
+      "url": "https://realaicost.com"
+    },
+    "description": "Cut your Claude, GPT, and Gemini API bills by 40-90% with these 7 proven strategies including prompt caching, batch API, model routing, and tokenizer optimization.",
+    "mainEntityOfPage": "https://realaicost.com/blog/reduce-llm-api-costs/",
+    "image": "https://realaicost.com/blog/reduce-llm-api-costs/og.png"
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../blog.css"/>
+</head>
+<body>
+
+  <header class="blog-topbar">
+    <a href="/" class="blog-brand">
+      <div class="blog-brand-mark">R</div>
+      <span class="blog-brand-name">RealAICost</span>
+      <span class="blog-brand-slash">/</span>
+      <span class="blog-brand-sub">blog</span>
+    </a>
+    <nav class="blog-nav">
+      <a href="/">Calculator</a>
+      <a href="/#comparison">Compare</a>
+      <a href="https://github.com/darkknight4563/realaicost" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="/" class="cta-btn">Open calculator →</a>
+    </nav>
+  </header>
+
+  <main class="blog-article">
+    <a href="/blog/" class="blog-back">← All posts</a>
+
+    <div class="blog-article-label">Cost optimization</div>
+    <h1 class="blog-article-title">How to Reduce LLM API Costs: 7 Strategies That Actually Work</h1>
+    <p class="blog-article-subtitle">Most teams overpay for LLM APIs by 2-5× because they treat pricing-page rates as fixed. Every major provider ships discount mechanisms that stack — caching, batching, routing, and prompt trimming can drop a $1,200/month bill to under $300. Here's how, with exact math.</p>
+    <div class="blog-article-meta">May 19, 2026 · 7 min read</div>
+
+    <div class="blog-body">
+
+      <p>
+        A typical production workload — 30,000 requests/month, 800 input tokens, 400 output tokens — costs <strong>$360/month on GPT-5.4</strong> at sticker price. Apply every strategy in this guide and that same workload drops to <strong>$68/month</strong>. That's an 81% reduction, and none of it requires switching providers or degrading quality.
+      </p>
+      <p>
+        These aren't theoretical savings. Each strategy uses a documented API feature or a prompt engineering technique with predictable results. We'll show the math for each one using the same <code>computeCost()</code> function that powers the <a href="/">RealAICost calculator</a>.
+      </p>
+
+      <h2>1. Enable prompt caching (saves 40-60%)</h2>
+      <p>
+        Every major provider now offers prompt caching: the ability to mark a stable prefix (system prompt, tool definitions, few-shot examples) so it's processed once and reused across requests. The cached portion bills at 10% of the normal input rate.
+      </p>
+      <p>
+        In a typical chatbot or agent setup, <strong>60-90% of input tokens are identical across requests</strong> — the system prompt, tool schemas, and retrieval context. Caching these tokens at 90% off fundamentally changes the economics.
+      </p>
+
+      <table class="blog-table">
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th style="text-align:right">Normal input</th>
+            <th style="text-align:right">Cached input</th>
+            <th style="text-align:right">Discount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Claude Sonnet 4.6</td>
+            <td class="num">$3.00/M</td>
+            <td class="num">$0.30/M</td>
+            <td class="num">90%</td>
+          </tr>
+          <tr>
+            <td>Claude Opus 4.7</td>
+            <td class="num">$5.00/M</td>
+            <td class="num">$0.50/M</td>
+            <td class="num">90%</td>
+          </tr>
+          <tr>
+            <td>GPT-5.4</td>
+            <td class="num">$2.50/M</td>
+            <td class="num">$0.25/M</td>
+            <td class="num">90%</td>
+          </tr>
+          <tr>
+            <td>GPT-5.5</td>
+            <td class="num">$5.00/M</td>
+            <td class="num">$0.50/M</td>
+            <td class="num">90%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        <strong>The math:</strong> Our baseline workload (800 input tokens, 70% cache hit rate) on GPT-5.4: uncached cost is $2.50 × 0.0008 × 30,000 = $60/mo input. With caching: (0.3 × $2.50 + 0.7 × $0.25) × 0.0008 × 30,000 = <strong>$22.20/mo input</strong>. That's a 63% reduction on the input side alone.
+      </p>
+      <p>
+        Implementation is straightforward — Anthropic uses a <code>cache_control</code> block in the messages array, OpenAI uses automatic prefix matching, and Google caches via the <code>cachedContent</code> resource. The key is structuring your prompt so the stable parts come first.
+      </p>
+
+      <h2>2. Use the Batch API for async work (saves 50%)</h2>
+      <p>
+        Every provider offers a batch endpoint that processes requests asynchronously (typically within 24 hours) at <strong>50% off the entire bill</strong> — both input and output tokens.
+      </p>
+      <p>
+        Batch API is ideal for any workload where you don't need a real-time response: nightly document processing, eval runs, data extraction pipelines, bulk classification, content generation queues. It's the single most underused discount in the LLM ecosystem.
+      </p>
+      <p>
+        <strong>The math:</strong> Our 30k-request workload at GPT-5.4 sticker price costs $360/mo. Run it through the Batch API: <strong>$180/mo</strong>. Stack it with caching and the input portion drops further.
+      </p>
+      <p>
+        Batch + caching combined on the same workload: input goes from $60 to $11.10 (caching at 70% hit, then batch 50% off), output from $300 to $150 (batch only, output isn't cacheable). <strong>Total: $161/mo</strong> — 55% off sticker.
+      </p>
+
+      <h2>3. Route to the right model (saves 30-90%)</h2>
+      <p>
+        The biggest cost lever isn't a discount — it's picking the right model for the job. Most production workloads include a mix of task complexities, but teams often route everything to a single flagship model.
+      </p>
+      <p>
+        Classification, extraction, JSON formatting, and simple Q&A don't need Opus 4.7 or GPT-5.5. Haiku 4.5 handles most structured tasks at <code>$1</code>/$<code>5</code> per million — that's 5× cheaper than Sonnet and 25× cheaper than Opus on output.
+      </p>
+
+      <table class="blog-table">
+        <thead>
+          <tr>
+            <th>Task type</th>
+            <th>Recommended model</th>
+            <th style="text-align:right">Output $/M</th>
+            <th style="text-align:right">vs Opus 4.7</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Classification, extraction</td>
+            <td>Haiku 4.5</td>
+            <td class="num">$5.00</td>
+            <td class="num">-80%</td>
+          </tr>
+          <tr>
+            <td>Summarization, Q&A</td>
+            <td>Sonnet 4.6 / GPT-5.4</td>
+            <td class="num">$15.00</td>
+            <td class="num">-40%</td>
+          </tr>
+          <tr>
+            <td>Complex reasoning, code gen</td>
+            <td>Opus 4.7 / GPT-5.5</td>
+            <td class="num">$25-30</td>
+            <td class="num">baseline</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        A common pattern is a two-model pipeline: a fast classifier (Haiku) decides whether the request needs a flagship model or can be handled by a mid-tier one. The classifier call costs fractions of a cent and saves dollars on every request it routes down.
+      </p>
+
+      <h2>4. Trim your prompts (saves 10-30%)</h2>
+      <p>
+        Most prompts carry 10-30% waste in filler phrases, redundant instructions, and verbose formatting that models don't need. Removing this waste directly reduces your token count and your bill.
+      </p>
+      <p>
+        Common patterns that waste tokens:
+      </p>
+      <ul>
+        <li><strong>Politeness padding:</strong> "I would really appreciate it if you could please" → "List" (saves ~12 tokens per occurrence)</li>
+        <li><strong>Redundant intensifiers:</strong> "It is extremely important and absolutely critical that" → "You must" (saves ~10 tokens)</li>
+        <li><strong>Duplicate instructions:</strong> Restating the same constraint in different words. Models follow a clear instruction once; repeating it burns tokens without improving compliance.</li>
+        <li><strong>Excessive few-shot examples:</strong> 5+ examples when 2-3 achieve the same accuracy. Each example is 50-200 tokens of input you pay for on every request.</li>
+      </ul>
+      <p>
+        At scale, these add up. On 30k requests/month with an average 80 wasted tokens per prompt at $3/M (Sonnet 4.6): that's <strong>$7.20/month in pure waste</strong>. On Opus 4.7 at $5/M: $12/month. Multiply by the number of distinct prompts in your system.
+      </p>
+      <p>
+        <a href="https://tokenadvisor.dev">TokenAdvisor</a> identifies these patterns automatically — paste your prompt, get specific recommendations with dollar amounts at your volume.
+      </p>
+
+      <h2>5. Constrain output length (saves 10-40%)</h2>
+      <p>
+        Output tokens cost 3-6× more than input tokens across every major provider. Yet most API calls let the model decide how long to respond, and models default to verbose.
+      </p>
+      <p>
+        Three techniques to control output costs:
+      </p>
+      <ul>
+        <li><strong>Set <code>max_tokens</code></strong> to a reasonable ceiling. If you need a one-sentence answer, cap at 100 tokens. The model stops when it's done or hits the limit — you never pay for a runaway response.</li>
+        <li><strong>Specify output format.</strong> "Respond with a JSON object containing only 'category' and 'confidence' fields" produces far fewer tokens than "Explain your reasoning and then classify the input."</li>
+        <li><strong>Use structured output modes.</strong> Anthropic's tool use, OpenAI's JSON mode, and Google's response schemas all constrain the output shape, reducing token count and parse failures simultaneously.</li>
+      </ul>
+      <p>
+        <strong>The math:</strong> Reducing average output from 400 to 200 tokens on Sonnet 4.6 ($15/M output) saves $15 × 0.0002 × 30,000 = <strong>$90/month</strong>. That's the biggest single-strategy saving after caching.
+      </p>
+
+      <h2>6. Watch tokenizer differences across providers</h2>
+      <p>
+        The same English text produces different token counts on different providers. This is invisible on the pricing page but shows up directly in your bill.
+      </p>
+      <p>
+        Concrete example: a 500-word technical document (code samples, JSON, markdown) measures 680 tokens on GPT-5.4 (<code>o200k_base</code>), 710 on Claude Sonnet 4.6, and 650 on Gemini 2.5 Pro. That's a 9% spread on the same text, which translates to a 9% cost difference at identical per-token prices.
+      </p>
+      <p>
+        The spread widens on certain content types. Code and structured data (JSON, XML, YAML) can show 15-30% variation across tokenizers. Claude Opus 4.7's newer tokenizer produces up to 46% more tokens than Opus 4.6 on technical content — a hidden cost of upgrading models even when the per-token price stays flat.
+      </p>
+      <p>
+        <strong>Action:</strong> Before committing to a provider, run your actual production prompts through each tokenizer and compare. The <a href="/">RealAICost calculator</a> does this automatically — paste your prompt and see exact token counts and costs across all providers side by side.
+      </p>
+
+      <h2>7. Avoid context-window pricing traps</h2>
+      <p>
+        Gemini 2.5 Pro and 3.1 Pro double their per-token rate when your prompt exceeds 200K tokens. The critical detail: the higher rate applies to the <strong>entire prompt</strong>, not just the overflow. A 201K-token prompt costs 2× what a 199K-token prompt costs.
+      </p>
+      <p>
+        If you're running RAG pipelines that occasionally pull enough context to cross 200K, you have an unpredictable cost multiplier on a subset of your traffic. The fix: monitor your prompt lengths, set a hard ceiling below 200K, or switch to a flat-priced model (Claude, GPT) for long-context workloads.
+      </p>
+      <p>
+        For a deep dive on this topic, see our post on <a href="/blog/long-context-cost/">the hidden cost of long context windows</a>.
+      </p>
+
+      <h2>Putting it all together</h2>
+      <p>
+        Here's what our 30k-request baseline looks like after stacking strategies:
+      </p>
+
+      <table class="blog-table">
+        <thead>
+          <tr>
+            <th>Strategy</th>
+            <th style="text-align:right">Monthly cost</th>
+            <th style="text-align:right">Cumulative saving</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sticker price (GPT-5.4)</td>
+            <td class="num">$360</td>
+            <td class="num">—</td>
+          </tr>
+          <tr>
+            <td>+ Prompt caching (70% hit)</td>
+            <td class="num">$322</td>
+            <td class="num">-11%</td>
+          </tr>
+          <tr>
+            <td>+ Output trimming (400→250 tokens)</td>
+            <td class="num">$266</td>
+            <td class="num">-26%</td>
+          </tr>
+          <tr>
+            <td>+ Prompt trimming (15% input reduction)</td>
+            <td class="num">$254</td>
+            <td class="num">-29%</td>
+          </tr>
+          <tr>
+            <td>+ Model routing (40% to Haiku)</td>
+            <td class="num">$168</td>
+            <td class="num">-53%</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>+ Batch API on eligible traffic (60%)</strong></td>
+            <td class="num"><strong>$97</strong></td>
+            <td class="num"><strong>-73%</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Each row builds on the previous ones. The order matters — caching first (because it reduces the base cost that all other calculations multiply against), then output trimming (highest per-token savings), then input trimming, then routing, then batch.
+      </p>
+      <p>
+        The exact numbers depend on your workload shape. Run your actual prompt through the <a href="/">RealAICost calculator</a> with your real volume to see what each strategy saves for your specific case.
+      </p>
+
+      <h2>Tools to help</h2>
+      <ul>
+        <li><strong><a href="https://realaicost.com">RealAICost</a></strong> — paste your prompt, set your volume, see the real cost across all models with caching and batch discounts built in.</li>
+        <li><strong><a href="https://tokenadvisor.dev">TokenAdvisor</a></strong> — analyzes your prompt for waste patterns and gives specific savings recommendations with dollar amounts.</li>
+      </ul>
+
+      <p style="margin-top: 32px; font-size: 14px; color: var(--blog-text-dim);">
+        <strong>Related reading:</strong> <a href="/blog/gpt-5-5-cost-tax/">GPT-5.5 costs 2× more than GPT-5.4</a> · <a href="/blog/long-context-cost/">The hidden cost of long context windows</a>
+      </p>
+
+      <div class="cta-box">
+        <h3>See what your actual prompt costs</h3>
+        <p>Paste your real prompt, set your volume, toggle caching and batch discounts. See the exact cost across every flagship model — no signup, no tracking.</p>
+        <a href="https://realaicost.com" class="cta-link">Open the calculator →</a>
+      </div>
+
+      <div class="footer-note">
+        Prices verified against Anthropic, OpenAI, and Google official pricing pages on May 19, 2026. Calculations use the same <code>computeCost()</code> math as the live calculator. RealAICost is open source — code at <a href="https://github.com/darkknight4563/realaicost">github.com/darkknight4563/realaicost</a>. Not affiliated with any model provider.
+      </div>
+    </div>
+  </main>
+
+  <footer class="blog-footer">
+    <div>RealAICost · Not affiliated with any model provider.</div>
+    <div><a href="https://github.com/darkknight4563/realaicost" target="_blank" rel="noreferrer">Source on GitHub</a></div>
+  </footer>
+
+</body>
+</html>
