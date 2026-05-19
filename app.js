@@ -1,10 +1,4 @@
-const {
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-  useCallback
-} = React;
+// React hooks already destructured in components.js
 const DEFAULT_PROMPT = `You are a senior support engineer for Stripe. Answer the customer's question using the provided docs. Be concise but complete.
 
 Rules:
