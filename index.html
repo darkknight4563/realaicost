@@ -8,6 +8,22 @@
   <title>RealAICost — The Honest AI Cost Calculator | Claude, GPT, Gemini</title>
   <meta name="description" content="Calculate the real cost of running Claude Opus 4.7, GPT-5, Gemini 2.5, and 20+ LLMs. Accurate for the new Opus tokenizer, prompt caching, and batch API discounts."/>
   <meta name="theme-color" content="#0A0E1A"/>
+  <link rel="canonical" href="https://realaicost.com/"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="RealAICost — The Honest AI Cost Calculator"/>
+  <meta property="og:description" content="Calculate the real cost of running Claude, GPT, Gemini, and 20+ LLMs. Accurate for prompt caching, batch discounts, and the Opus 4.7 tokenizer."/>
+  <meta property="og:image" content="https://realaicost.com/og.png"/>
+  <meta property="og:image:type" content="image/png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:url" content="https://realaicost.com/"/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="RealAICost — The Honest AI Cost Calculator"/>
+  <meta name="twitter:description" content="Calculate the real cost of running Claude, GPT, Gemini, and 20+ LLMs. Free, no signup."/>
+  <meta name="twitter:image" content="https://realaicost.com/og.png"/>
+
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234ECDC4'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0E1A'%3ET%3C/text%3E%3C/svg%3E"/>
 
   <!-- Fonts -->
@@ -25,10 +41,11 @@
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "TokenTruth",
+    "name": "RealAICost",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "description": "Honest LLM cost calculator covering the Opus 4.7 tokenizer, prompt caching, and batch discounts.",
+    "url": "https://realaicost.com",
+    "description": "Free AI cost calculator covering 20+ LLMs including Claude Opus 4.7, GPT-5, and Gemini. Accurate for prompt caching, batch discounts, and tokenizer differences.",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
   </script>
@@ -41,12 +58,20 @@
   </script>
 
   <!-- React + Babel -->
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
   <div id="root"></div>
+
+  <section style="max-width:720px;margin:80px auto 0;padding:0 32px;color:#9098a8;font-family:'Inter',sans-serif;font-size:15px;line-height:1.7">
+    <h2 style="color:#E8EAED;font-size:24px;margin:0 0 16px">The Real Cost of AI APIs</h2>
+    <p>Every API call to a large language model is billed by <strong style="color:#E8EAED">tokens</strong> — chunks of text the model reads and generates. Prices vary dramatically: Claude Opus 4.7 charges $5/M input tokens, while Haiku 4.5 charges $1/M. The same prompt can cost 5× more depending on which model you choose.</p>
+    <p>RealAICost is the <strong style="color:#E8EAED">honest calculator</strong> that shows you exactly what you'll pay. We cover 20+ models across Anthropic, OpenAI, Google, Meta, and DeepSeek — with accurate token counting, prompt caching savings, and batch API discounts built in.</p>
+    <p>Unlike other calculators, we use <strong style="color:#E8EAED">real tokenizer counts</strong>: tiktoken for OpenAI (client-side, exact), Anthropic's count_tokens API, and Google's countTokens API. No estimates, no guesswork.</p>
+    <p>Need help optimizing your prompts? Try our sister tool <a href="https://tokenadvisor.dev" style="color:#4ECDC4">TokenAdvisor</a> — paste your prompt, see where your tokens go, and get specific savings recommendations with dollar amounts at your volume.</p>
+  </section>
 
   <script type="text/babel" src="tweaks-panel.jsx"></script>
   <script type="text/babel" src="data.jsx"></script>
